@@ -6,12 +6,41 @@
         <v-col cols="12" :md="showSidebar ? 9 : 12" lg="9">
           <div style="position: relative; height: 100%">
             <v-card elevation="5" rounded="lg" style="height: 100%">
-              <v-img
+              <!-- <v-img
                 cover
                 height="900"
                 max-height="80vh"
                 src="https://www.ikea.com/ext/ingkadam/m/7262b24abd9b498f/original/PH200284.jpg?f=sg"
-              ></v-img>
+              ></v-img> -->
+
+              <v-card>
+                <div style="position: relative">
+                  <v-img
+                    cover
+                    height="800"
+                    max-height="80vh"
+                    src="https://www.ikea.com/ext/ingkadam/m/7262b24abd9b498f/original/PH200284.jpg?f=sg"
+                  ></v-img>
+                  <!-- Hotspot buttons in dialog -->
+                  <div class="hotspot-container">
+                    <v-btn
+                      v-for="(spot, index) in hotspots"
+                      :key="index"
+                      class="hotspot-button"
+                      color="black"
+                      icon
+                      size="small"
+                      :style="{ left: spot.x + '%', top: spot.y + '%' }"
+                      @click.stop="openLink(spot.url)"
+                    >
+                      <v-icon color="white">mdi-circle</v-icon>
+                      <v-tooltip activator="parent" location="top">
+                        {{ spot.tooltip }}
+                      </v-tooltip>
+                    </v-btn>
+                  </div>
+                </div>
+              </v-card>
 
               <!-- Toggle Button (Positioned on image) -->
               <v-btn
@@ -64,7 +93,7 @@
                   <v-col cols="">
                     <v-img
                       :src="product.image"
-                      height="100"
+                      height="115"
                       contain
                       class="rounded-lg"
                     ></v-img>
@@ -76,10 +105,14 @@
                       <v-list-item-title class="text-h6 font-weight-bold">
                         {{ product.name }}
                       </v-list-item-title>
+                      <v-list-item-subtitle class="text-black text-body-1 mt-1">
+                        {{ product.description }}
+                      </v-list-item-subtitle>
+
                       <v-list-item-subtitle
                         class="text-primary text-body-1 mt-2"
                       >
-                        ${{ product.price }}
+                        RM {{ product.price }}
                       </v-list-item-subtitle>
                     </v-list-item-content>
 
@@ -109,62 +142,105 @@ export default {
   data() {
     return {
       showSidebar: true,
+      hover: false,
       recommendedProducts: [
         {
           id: 1,
-          name: "STRANDMON Wing Chair",
-          price: 249.99,
+          name: "IDANÄS",
+          description: "Bookcase",
+          price: 1390.0,
           image:
-            "https://www.ikea.com/us/en/images/products/strandmon-wing-chair-gray__1101510_pe866548_s5.jpg",
-          link: "https://www.ikea.com",
+            "https://www.ikea.com/my/en/images/products/idanaes-bookcase-dark-brown-stained__1008945_pe827388_s5.jpg?f=xl",
+          link: "https://www.ikea.com/my/en/p/idanaes-bookcase-dark-brown-stained-80487832/",
         },
         {
           id: 2,
-          name: "POÄNG Armchair",
+          name: "IDANÄS",
+          description: "Coffee Table",
           price: 129.0,
           image:
-            "https://www.ikea.com/us/en/images/products/poang-armchair-birch-veneer-black__38296_pe130209_s5.jpg",
-          link: "https://www.ikea.com",
+            "https://www.ikea.com/my/en/images/products/idanaes-coffee-table-dark-brown-stained__1161066_pe889274_s5.jpg?f=xl",
+          link: "https://www.ikea.com/my/en/p/idanaes-coffee-table-dark-brown-stained-90500003/",
         },
         {
           id: 3,
-          name: "EKET Storage Combination",
-          price: 89.99,
+          name: "DYTÅG",
+          description: "Curtains",
+          price: 285,
           image:
-            "https://www.ikea.com/us/en/images/products/eket-cabinet-with-legs-white__1101510_pe866548_s5.jpg",
-          link: "https://www.ikea.com",
+            "https://www.ikea.com/my/en/images/products/dytag-curtains-1-pair-dark-beige-with-heading-tape__1024993_pe833752_s5.jpg?f=xl",
+          link: "https://www.ikea.com/my/en/p/dytag-curtains-1-pair-dark-beige-with-heading-tape-40519118/",
         },
         {
           id: 4,
-          name: "HEMNES Coffee Table",
+          name: "FORSÅ",
+          description: "Work lamp",
           price: 139.0,
           image:
-            "https://www.ikea.com/us/en/images/products/hemnes-coffee-table-black-brown__0737105_pe740917_s5.jpg",
-          link: "https://www.ikea.com",
+            "https://www.ikea.com/my/en/images/products/forsa-work-lamp-nickel-plated__0121576_pe278160_s5.jpg?f=xl",
+          link: "https://www.ikea.com/my/en/p/forsa-work-lamp-nickel-plated-10146766/",
         },
         {
           id: 5,
-          name: "LACK Side Table",
-          price: 12.99,
+          name: "IDANÄS",
+          description: "Cabinet",
+          price: 2490.0,
           image:
-            "https://www.ikea.com/us/en/images/products/lack-side-table-black-brown__0702210_pe723995_s5.jpg",
-          link: "https://www.ikea.com",
+            "https://www.ikea.com/my/en/images/products/idanaes-high-cabinet-w-gls-drs-and-1-drawer-dark-brown-stained__1008948_pe827389_s5.jpg?f=xl",
+          link: "https://www.ikea.com/my/en/p/idanaes-high-cabinet-w-gls-drs-and-1-drawer-dark-brown-stained-50487838/",
         },
         {
           id: 6,
-          name: "MALM Dressing Table",
-          price: 149.0,
+          name: "RÖDFLIK",
+          description: "Floor/reading lamp",
+          price: 139.0,
           image:
-            "https://www.ikea.com/us/en/images/products/malm-dressing-table-white-stained-oak-veneer__0636928_pe698416_s5.jpg",
-          link: "https://www.ikea.com",
+            "https://www.ikea.com/my/en/images/products/roedflik-floor-reading-lamp-grey-green__1232722_pe916583_s5.jpg?f=xl",
+          link: "https://www.ikea.com/my/en/p/roedflik-floor-reading-lamp-grey-green-80563576/",
+        },
+      ],
+      hotspots: [
+        {
+          x: 18,
+          y: 25,
+          url: "https://www.ikea.com/my/en/p/idanaes-high-cabinet-w-gls-drs-and-1-drawer-dark-brown-stained-50487838/",
+          tooltip: "Cabinet",
         },
         {
-          id: 7,
-          name: "BILLY Bookcase",
-          price: 99.99,
-          image:
-            "https://www.ikea.com/us/en/images/products/billy-bookcase-white__0625599_pe692491_s5.jpg",
-          link: "https://www.ikea.com",
+          x: 73,
+          y: 35,
+          url: "https://www.ikea.com/my/en/p/forsa-work-lamp-nickel-plated-10146766/",
+          tooltip: "Work Lamp",
+        },
+        {
+          x: 40,
+          y: 70,
+          url: "https://www.ikea.com/my/en/p/idanaes-coffee-table-dark-brown-stained-90500003/",
+          tooltip: "Coffee Table",
+        },
+        {
+          x: 45,
+          y: 15,
+          url: "https://www.ikea.com/my/en/p/ringblomma-roman-blind-beige-40583538/",
+          tooltip: "Blind",
+        },
+        {
+          x: 38,
+          y: 40,
+          url: "https://www.ikea.com/my/en/p/roedflik-floor-reading-lamp-grey-green-80563576/",
+          tooltip: "Lamp",
+        },
+        {
+          x: 25,
+          y: 25,
+          url: "https://www.ikea.com/my/en/p/idanaes-bookcase-dark-brown-stained-80487832/",
+          tooltip: "Bookcase",
+        },
+        {
+          x: 55,
+          y: 30,
+          url: "https://www.ikea.com/my/en/p/dytag-curtains-1-pair-dark-beige-with-heading-tape-40519118/",
+          tooltip: "Curtain",
         },
       ],
     };
@@ -238,6 +314,33 @@ export default {
 
 .v-list-item__content {
   padding: 0;
+}
+
+/* Update your hotspot styles */
+.hotspot-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hotspot-button {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.6) !important;
+  border: 2px solid white !important;
+  pointer-events: auto;
+  transition: transform 0.2s;
+}
+
+.hotspot-button:hover {
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+/* Ensure tooltips appear above other elements */
+.v-tooltip {
+  z-index: 1000;
 }
 
 @media (max-width: 960px) {

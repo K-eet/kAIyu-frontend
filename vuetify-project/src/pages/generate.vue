@@ -239,7 +239,6 @@
           </v-btn>
         </div>
       </div>
-
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="brown-darken" @click="dialog = false">Close</v-btn>
