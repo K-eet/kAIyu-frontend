@@ -1,83 +1,121 @@
 <template>
-  <v-container fill-height>
-    <v-row align="center" justify="center">
-      <!-- Main Product Image (Left Side) -->
-      <v-col cols="12" md="9" lg="9">
-        <v-card elevation="5" rounded="lg">
-          <v-img
-            cover
-            height="900"
-            max-height="80vh"
-            src="https://www.ikea.com/ext/ingkadam/m/7262b24abd9b498f/original/PH200284.jpg?f=sg"
-          ></v-img>
-        </v-card>
-      </v-col>
+  <div class="mt-8">
+    <v-container fill-height>
+      <v-row align="center" justify="center">
+        <!-- Main Product Image (Left Side) -->
+        <v-col cols="12" :md="showSidebar ? 9 : 12" lg="9">
+          <div style="position: relative; height: 100%">
+            <v-card elevation="5" rounded="lg" style="height: 100%">
+              <v-img
+                cover
+                height="900"
+                max-height="80vh"
+                src="https://www.ikea.com/ext/ingkadam/m/7262b24abd9b498f/original/PH200284.jpg?f=sg"
+              ></v-img>
 
-      <!-- Product Recommendations (Right Side) -->
-      <v-col cols="12" md="3" lg="3" class="">
-        <v-card flat class="sticky-sidebar">
-          <v-list three-line>
-            <v-list-item
-              v-for="product in recommendedProducts"
-              :key="product.id"
-              class="mb-4 product-card"
-              :href="product.link"
-              target="_blank"
-            >
-              <v-row>
-                <!-- Product Thumbnail -->
-                <v-col cols="">
-                  <v-img
-                    :src="product.image"
-                    height="100"
-                    contain
-                    class="rounded-lg"
-                  ></v-img>
-                </v-col>
+              <!-- Toggle Button (Positioned on image) -->
+              <v-btn
+                fab
+                dark
+                small
+                color="#3C6E71"
+                style="
+                  position: absolute;
+                  bottom: 20px;
+                  right: 20px;
+                  z-index: 100;
+                  opacity: 0.85;
+                  background-color: rgba(60, 110, 113, 0.8) !important;
+                  backdrop-filter: blur(2px);
+                  transition: opacity 0.3s ease;
+                "
+                @click="showSidebar = !showSidebar"
+                @mouseover="hover = true"
+                @mouseleave="hover = false"
+                :style="{ opacity: hover ? 0.7 : 0.4 }"
+              >
+                <v-icon>{{
+                  showSidebar ? "mdi-chevron-right" : "mdi-format-list-bulleted"
+                }}</v-icon>
+              </v-btn>
+            </v-card>
+          </div>
+        </v-col>
 
-                <!-- Product Details -->
-                <v-col cols="8">
-                  <v-list-item-content>
-                    <v-list-item-title class="text-h6 font-weight-bold">
-                      {{ product.name }}
-                    </v-list-item-title>
-                    <v-list-item-subtitle class="text-primary text-body-1 mt-2">
-                      ${{ product.price }}
-                    </v-list-item-subtitle>
-                  </v-list-item-content>
+        <!-- Product Recommendations (Right Side) -->
+        <v-col
+          cols="12"
+          md="3"
+          lg="3"
+          class="sidebar-col"
+          :class="{ 'd-none': !showSidebar }"
+        >
+          <v-card flat class="sticky-sidebar">
+            <v-list three-line>
+              <v-list-item
+                v-for="product in recommendedProducts"
+                :key="product.id"
+                class="mb-4 product-card"
+                :href="product.link"
+                target="_blank"
+              >
+                <v-row>
+                  <!-- Product Thumbnail -->
+                  <v-col cols="">
+                    <v-img
+                      :src="product.image"
+                      height="100"
+                      contain
+                      class="rounded-lg"
+                    ></v-img>
+                  </v-col>
 
-                  <!-- Shop Now Button -->
-                  <v-btn
-                    selected-class="selected-design-button"
-                    x-small
-                    class="mt-3"
-                    :href="product.link"
-                    target="_blank"
-                    color="#3C6E71"
-                  >
-                    Shop <v-icon right>mdi-arrow-right</v-icon>
-                  </v-btn>
-                </v-col>
-              </v-row>
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+                  <!-- Product Details -->
+                  <v-col cols="8">
+                    <v-list-item-content>
+                      <v-list-item-title class="text-h6 font-weight-bold">
+                        {{ product.name }}
+                      </v-list-item-title>
+                      <v-list-item-subtitle
+                        class="text-primary text-body-1 mt-2"
+                      >
+                        ${{ product.price }}
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+
+                    <!-- Shop Now Button -->
+                    <v-btn
+                      x-small
+                      class="mt-3"
+                      :href="product.link"
+                      target="_blank"
+                      color="#3C6E71"
+                    >
+                      Shop <v-icon right>mdi-arrow-right</v-icon>
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-list-item>
+            </v-list>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
+      showSidebar: true,
       recommendedProducts: [
         {
           id: 1,
           name: "STRANDMON Wing Chair",
           price: 249.99,
           image:
-            "https://www.ikea.com/us/en/images/products/strandmon-wing-chair__1101510_pe866548_s5.jpg",
+            "https://www.ikea.com/us/en/images/products/strandmon-wing-chair-gray__1101510_pe866548_s5.jpg",
           link: "https://www.ikea.com",
         },
         {
@@ -85,7 +123,7 @@ export default {
           name: "POÄNG Armchair",
           price: 129.0,
           image:
-            "https://www.ikea.com/us/en/images/products/poaeng-armchair__38296_PE130209_S5.JPG",
+            "https://www.ikea.com/us/en/images/products/poang-armchair-birch-veneer-black__38296_pe130209_s5.jpg",
           link: "https://www.ikea.com",
         },
         {
@@ -93,7 +131,7 @@ export default {
           name: "EKET Storage Combination",
           price: 89.99,
           image:
-            "https://www.ikea.com/us/en/images/products/eket-storage-combination-with-legs-white__1101510_pe866548_s5.jpg",
+            "https://www.ikea.com/us/en/images/products/eket-cabinet-with-legs-white__1101510_pe866548_s5.jpg",
           link: "https://www.ikea.com",
         },
         {
@@ -101,7 +139,7 @@ export default {
           name: "HEMNES Coffee Table",
           price: 139.0,
           image:
-            "https://www.ikea.com/us/en/images/products/hemnes-coffee-table-black__0737105_PE740917_S5.JPG",
+            "https://www.ikea.com/us/en/images/products/hemnes-coffee-table-black-brown__0737105_pe740917_s5.jpg",
           link: "https://www.ikea.com",
         },
         {
@@ -109,7 +147,7 @@ export default {
           name: "LACK Side Table",
           price: 12.99,
           image:
-            "https://www.ikea.com/us/en/images/products/lack-side-table-black__0702210_PE723995_S5.JPG",
+            "https://www.ikea.com/us/en/images/products/lack-side-table-black-brown__0702210_pe723995_s5.jpg",
           link: "https://www.ikea.com",
         },
         {
@@ -117,7 +155,7 @@ export default {
           name: "MALM Dressing Table",
           price: 149.0,
           image:
-            "https://www.ikea.com/us/en/images/products/malm-dressing-table-white__0636928_PE698416_S5.JPG",
+            "https://www.ikea.com/us/en/images/products/malm-dressing-table-white-stained-oak-veneer__0636928_pe698416_s5.jpg",
           link: "https://www.ikea.com",
         },
         {
@@ -125,7 +163,7 @@ export default {
           name: "BILLY Bookcase",
           price: 99.99,
           image:
-            "https://www.ikea.com/us/en/images/products/billy-bookcase-white__0625599_PE692491_S5.JPG",
+            "https://www.ikea.com/us/en/images/products/billy-bookcase-white__0625599_pe692491_s5.jpg",
           link: "https://www.ikea.com",
         },
       ],
@@ -143,10 +181,28 @@ export default {
   flex-direction: column;
 }
 
+.toggle-sidebar-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 100;
+}
+
+.close-sidebar-btn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 10;
+}
+
 .scrollable-products {
   overflow-y: auto;
   flex-grow: 1;
   padding-right: 8px;
+}
+
+.sidebar-col {
+  transition: all 0.3s ease;
 }
 
 /* Custom scrollbar */
@@ -182,5 +238,19 @@ export default {
 
 .v-list-item__content {
   padding: 0;
+}
+
+@media (max-width: 960px) {
+  .sidebar-col {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 300px;
+    background: white;
+    z-index: 99;
+    overflow-y: auto;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+  }
 }
 </style>
