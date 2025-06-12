@@ -47,7 +47,7 @@
                 fab
                 dark
                 small
-                color="#3C6E71"
+                color="#284B63"
                 style="
                   position: absolute;
                   bottom: 20px;
@@ -90,7 +90,7 @@
               >
                 <v-row>
                   <!-- Product Thumbnail -->
-                  <v-col cols="">
+                  <v-col cols="5">
                     <v-img
                       :src="product.image"
                       height="115"
@@ -100,7 +100,7 @@
                   </v-col>
 
                   <!-- Product Details -->
-                  <v-col cols="8">
+                  <v-col cols="7">
                     <v-list-item-content>
                       <v-list-item-title class="text-h6 font-weight-bold">
                         {{ product.name }}
@@ -108,7 +108,6 @@
                       <v-list-item-subtitle class="text-black text-body-1 mt-1">
                         {{ product.description }}
                       </v-list-item-subtitle>
-
                       <v-list-item-subtitle
                         class="text-primary text-body-1 mt-2"
                       >
@@ -122,7 +121,7 @@
                       class="mt-3"
                       :href="product.link"
                       target="_blank"
-                      color="#3C6E71"
+                      color="#284B63"
                     >
                       Shop <v-icon right>mdi-arrow-right</v-icon>
                     </v-btn>
@@ -137,7 +136,7 @@
   </div>
 </template>
 
-<script>
+<script type="js">
 export default {
   data() {
     return {
@@ -245,7 +244,13 @@ export default {
       ],
     };
   },
-};
+  methods: {
+    openLink(url) {
+      // Open in new tab
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+}
+}
 </script>
 
 <style scoped>
@@ -277,8 +282,14 @@ export default {
   padding-right: 8px;
 }
 
-.sidebar-col {
-  transition: all 0.3s ease;
+.sidebar-col .v-list {
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.sidebar-col .v-list::-webkit-scrollbar {
+  display: none;
 }
 
 /* Custom scrollbar */

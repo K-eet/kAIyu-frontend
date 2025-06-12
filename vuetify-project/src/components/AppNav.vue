@@ -3,44 +3,37 @@
     <v-toolbar>
       <!-- Logo + App Name  -->
       <template v-slot:prepend>
-        <v-btn :ripple="false" to="landing">
-          <!-- <img alt="chair-icon" class="custom-icon mr-2" src="@/assets/chair-icon.png"> -->
-          <img
-            alt="chair-icon"
-            class="custom-icon mr-2"
-            src="https://raw.githubusercontent.com/Naqo08/Team-3-Vue-App-Project/din-branch/images-logo/chair-icon.png"
-          />
-          <span class="font-weight-black text-h4">kAIyu</span>
+        <v-btn
+          class="ml-4"
+          prepend-icon="mdi-creation"
+          :ripple="false"
+          to="/generate"
+          variant="plain"
+        >
+          <span class="font-weight-bold text-h6"> Generate</span>
+        </v-btn>
+
+        <v-btn
+          class="ml-4"
+          prepend-icon="mdi-view-gallery"
+          :ripple="false"
+          to="/gallery"
+          variant="plain"
+        >
+          <span class="font-weight-bold text-h6">Gallery</span>
         </v-btn>
       </template>
 
       <!-- Center Tabs -->
-      <v-btn
-        class="ml-4"
-        prepend-icon="mdi-creation"
-        :ripple="false"
-        to="/generate"
-        variant="plain"
-      >
-        <span class="font-weight-bold text-h6"> Generate</span>
-      </v-btn>
-      <v-btn
-        class="ml-4"
-        prepend-icon="mdi-information"
-        :ripple="false"
-        to="/about"
-        variant="plain"
-      >
-        <span class="font-weight-bold text-h6"> About</span>
-      </v-btn>
-      <v-btn
-        class="ml-4"
-        prepend-icon="mdi-view-gallery"
-        :ripple="false"
-        to="/gallery"
-        variant="plain"
-      >
-        <span class="font-weight-bold text-h6">Gallery</span>
+
+      <v-btn :ripple="false" to="landing">
+        <!-- <img alt="chair-icon" class="custom-icon mr-2" src="@/assets/chair-icon.png"> -->
+        <img
+          alt="chair-icon"
+          class="custom-icon mr-2"
+          src="@/assets/kAiyulogo.png"
+        />
+        <span class="font-weight-black text-h4"></span>
       </v-btn>
 
       <!-- Right Section: Sign Up + Avatar -->
@@ -122,10 +115,8 @@ function toggleTheme() {
 
 <style scoped>
 .custom-icon {
-  height: 28px;
-  width: 28px;
-  border-radius: 60%;
-  filter: grayscale(100%);
+  height: 20%;
+  width: 20%;
   transition: all 0.3s ease;
   object-fit: cover;
   vertical-align: middle;

@@ -90,12 +90,15 @@
                     <div class="d-flex justify-center">
                       <v-btn
                         class="mr-2"
-                        color="brown"
+                        color="#284b63"
                         variant="outlined"
                         @click="removeImage"
                         >Remove Image</v-btn
                       >
-                      <v-btn color="brown" variant="flat" @click="triggerUpload"
+                      <v-btn
+                        color="#284b63"
+                        variant="flat"
+                        @click="triggerUpload"
                         >Change Image</v-btn
                       >
                       <input
@@ -120,7 +123,7 @@
                   <v-btn
                     block
                     class="text-none font-weight-bold"
-                    color="#3C6E71"
+                    color="#284b63"
                     prepend-icon="mdi-camera"
                     rounded="lg"
                     size="large"
@@ -192,12 +195,12 @@
                   <v-btn
                     block
                     class="text-none font-weight-bold"
-                    color="#3C6E71"
+                    color="#284b63"
                     elevation="0"
                     prepend-icon="mdi-creation"
                     rounded="lg"
                     size="large"
-                    @click="generateDesign"
+                    to="/output"
                   >
                     GENERATE DESIGN
                   </v-btn>
