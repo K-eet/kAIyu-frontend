@@ -6,13 +6,6 @@
         <v-col cols="12" :md="showSidebar ? 9 : 12" lg="9">
           <div style="position: relative; height: 100%">
             <v-card elevation="5" rounded="lg" style="height: 100%">
-              <!-- <v-img
-                cover
-                height="900"
-                max-height="80vh"
-                src="https://www.ikea.com/ext/ingkadam/m/7262b24abd9b498f/original/PH200284.jpg?f=sg"
-              ></v-img> -->
-
               <v-card>
                 <div style="position: relative">
                   <v-img
