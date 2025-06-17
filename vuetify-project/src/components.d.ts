@@ -13,6 +13,7 @@ declare module 'vue' {
     AppNav: typeof import('./components/AppNav.vue')['default']
     AppNavAnis: typeof import('./components/AppNav-anis.vue')['default']
     copy: typeof import('./components/AppNav copy.vue')['default']
+    CoverflowSlider2: typeof import('./components/CoverflowSlider2.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     ImageContainer: typeof import('./components/imageContainer.vue')['default']
     ImageGallery: typeof import('./components/ImageGallery.vue')['default']

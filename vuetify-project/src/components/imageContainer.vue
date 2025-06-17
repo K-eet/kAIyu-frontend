@@ -20,11 +20,14 @@
                       v-for="(spot, index) in hotspots"
                       :key="index"
                       class="hotspot-button"
+                      :class="{
+                        'hotspot-active': highlightedProduct === spot.productId,
+                      }"
                       color="black"
                       icon
                       size="small"
                       :style="{ left: spot.x + '%', top: spot.y + '%' }"
-                      @click.stop="openLink(spot.url)"
+                      @click.stop="scrollToProduct(spot.productId)"
                     >
                       <v-icon color="white">mdi-circle</v-icon>
                       <v-tooltip activator="parent" location="top">
@@ -73,55 +76,64 @@
           :class="{ 'd-none': !showSidebar }"
         >
           <v-card flat class="sticky-sidebar">
-            <v-list three-line>
-              <v-list-item
-                v-for="product in recommendedProducts"
-                :key="product.id"
-                class="mb-4 product-card"
-                :href="product.link"
-                target="_blank"
-              >
-                <v-row>
-                  <!-- Product Thumbnail -->
-                  <v-col cols="5">
-                    <v-img
-                      :src="product.image"
-                      height="115"
-                      contain
-                      class="rounded-lg"
-                    ></v-img>
-                  </v-col>
+            <div class="scrollable-products" ref="productList">
+              <v-list three-line>
+                <v-list-item
+                  v-for="product in recommendedProducts"
+                  :key="product.id"
+                  :ref="`product-${product.id}`"
+                  class="mb-4 product-card"
+                  :class="{
+                    'product-highlighted': highlightedProduct === product.id,
+                  }"
+                  :href="product.link"
+                  target="_blank"
+                >
+                  <v-row>
+                    <!-- Product Thumbnail -->
+                    <v-col cols="5">
+                      <v-img
+                        :src="product.image"
+                        height="115"
+                        contain
+                        class="rounded-lg"
+                      ></v-img>
+                    </v-col>
 
-                  <!-- Product Details -->
-                  <v-col cols="7">
-                    <v-list-item-content>
-                      <v-list-item-title class="text-h6 font-weight-bold">
-                        {{ product.name }}
-                      </v-list-item-title>
-                      <v-list-item-subtitle class="text-black text-body-1 mt-1">
-                        {{ product.description }}
-                      </v-list-item-subtitle>
-                      <v-list-item-subtitle
-                        class="text-primary text-body-1 mt-2"
+                    <!-- Product Details -->
+                    <v-col cols="7">
+                      <v-list-item-content>
+                        <v-list-item-title class="text-h6 font-weight-bold">
+                          {{ product.name }}
+                        </v-list-item-title>
+                        <v-list-item-subtitle
+                          class="text-black text-body-1 mt-1"
+                        >
+                          {{ product.description }}
+                        </v-list-item-subtitle>
+                        <v-list-item-subtitle
+                          class="text-brown-darken-4 text-body-1 mt-2"
+                        >
+                          RM {{ product.price }}
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+
+                      <!-- Shop Now Button -->
+                      <v-btn
+                        x-small
+                        class="mt-3"
+                        :href="product.link"
+                        target="_blank"
+                        color="#E6D6C2"
+                        @click.stop
                       >
-                        RM {{ product.price }}
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-
-                    <!-- Shop Now Button -->
-                    <v-btn
-                      x-small
-                      class="mt-3"
-                      :href="product.link"
-                      target="_blank"
-                      color="#284B63"
-                    >
-                      Shop <v-icon right>mdi-arrow-right</v-icon>
-                    </v-btn>
-                  </v-col>
-                </v-row>
-              </v-list-item>
-            </v-list>
+                        Shop <v-icon right>mdi-arrow-right</v-icon>
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-list-item>
+              </v-list>
+            </div>
           </v-card>
         </v-col>
       </v-row>
@@ -135,6 +147,7 @@ export default {
     return {
       showSidebar: true,
       hover: false,
+      highlightedProduct: null,
       recommendedProducts: [
         {
           id: 1,
@@ -195,54 +208,69 @@ export default {
         {
           x: 18,
           y: 25,
-          url: "https://www.ikea.com/my/en/p/idanaes-high-cabinet-w-gls-drs-and-1-drawer-dark-brown-stained-50487838/",
+          productId: 5, // Cabinet
           tooltip: "Cabinet",
         },
         {
           x: 73,
           y: 35,
-          url: "https://www.ikea.com/my/en/p/forsa-work-lamp-nickel-plated-10146766/",
+          productId: 4, // Work Lamp
           tooltip: "Work Lamp",
         },
         {
           x: 40,
           y: 70,
-          url: "https://www.ikea.com/my/en/p/idanaes-coffee-table-dark-brown-stained-90500003/",
+          productId: 2, // Coffee Table
           tooltip: "Coffee Table",
-        },
-        {
-          x: 45,
-          y: 15,
-          url: "https://www.ikea.com/my/en/p/ringblomma-roman-blind-beige-40583538/",
-          tooltip: "Blind",
         },
         {
           x: 38,
           y: 40,
-          url: "https://www.ikea.com/my/en/p/roedflik-floor-reading-lamp-grey-green-80563576/",
-          tooltip: "Lamp",
+          productId: 6, // Floor Lamp
+          tooltip: "Floor Lamp",
         },
         {
           x: 25,
           y: 25,
-          url: "https://www.ikea.com/my/en/p/idanaes-bookcase-dark-brown-stained-80487832/",
+          productId: 1, // Bookcase
           tooltip: "Bookcase",
         },
         {
           x: 55,
           y: 30,
-          url: "https://www.ikea.com/my/en/p/dytag-curtains-1-pair-dark-beige-with-heading-tape-40519118/",
-          tooltip: "Curtain",
+          productId: 3, // Curtains
+          tooltip: "Curtains",
         },
       ],
     };
   },
   methods: {
-    openLink(url) {
-      // Open in new tab
-      window.open(url, '_blank', 'noopener,noreferrer');
-    }
-}
+    scrollToProduct(productId) {
+      // Show sidebar if hidden
+      if (!this.showSidebar) {
+        this.showSidebar = true;
+      }
+
+      this.$nextTick(() => {
+        const productElement = this.$refs[`product-${productId}`];
+        if (productElement && productElement[0]) {
+          // Highlight the product
+          this.highlightedProduct = productId;
+
+          // Scroll to the product
+          productElement[0].$el.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          });
+
+          // Remove highlight after 3 seconds
+          setTimeout(() => {
+            this.highlightedProduct = null;
+          }, 3000);
+        }
+      });
+    },
+  }
 }
 </script>
 
@@ -287,7 +315,7 @@ export default {
 
 /* Custom scrollbar */
 .scrollable-products::-webkit-scrollbar {
-  width: 6px;
+  display: none;
 }
 
 .scrollable-products::-webkit-scrollbar-track {
@@ -305,7 +333,7 @@ export default {
 }
 
 .product-card {
-  transition: transform 0.3s;
+  transition: all 0.3s ease;
   border-radius: 8px;
   border: 1px solid #eee;
   padding: 8px !important;
@@ -316,11 +344,25 @@ export default {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Highlighted product styles */
+.product-highlighted {
+  border: 2px solid #284b63 !important;
+  background-color: rgba(40, 75, 99, 0.05) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 75, 99, 0.2) !important;
+}
+
+/* Hotspot buttons */
+.hotspot-active {
+  background: rgba(40, 75, 99, 0.8) !important;
+  border: 2px solid #e6d6c2 !important;
+  transform: translate(-50%, -50%) scale(1.3) !important;
+}
+
 .v-list-item__content {
   padding: 0;
 }
 
-/* Update your hotspot styles */
 .hotspot-container {
   position: absolute;
   top: 0;
@@ -335,14 +377,15 @@ export default {
   background: rgba(0, 0, 0, 0.6) !important;
   border: 2px solid white !important;
   pointer-events: auto;
-  transition: transform 0.2s;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .hotspot-button:hover {
   transform: translate(-50%, -50%) scale(1.2);
+  /* background: rgba(40, 75, 99, 0.8) !important; */
 }
 
-/* Ensure tooltips appear above other elements */
 .v-tooltip {
   z-index: 1000;
 }

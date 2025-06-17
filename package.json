@@ -2,5 +2,8 @@
   "devDependencies": {
     "sass": "^1.89.1",
     "sass-loader": "^16.0.5"
+  },
+  "dependencies": {
+    "swiper": "^11.2.8"
   }
 }

@@ -1,6 +1,6 @@
 <template>
-    <AppNav2/>
-     <!-- <v-container height="50" :fluid="true" style="padding: 0">
+  <AppNav />
+  <!-- <v-container height="50" :fluid="true" style="padding: 0">
     <v-row>
         <v-col cols="12"></v-col>
         <v-col cols="12"></v-col>
@@ -16,61 +16,74 @@
     </p>
 
     <div class="image-collage">
-  <div
-    v-for="(image, index) in collageImages"
-    :key="index"
-    class="collage-item"
-    @click="openImage(image)"
-  >
-    <v-img
-      :src="image.src"
-      :alt="image.alt || `Design Image ${index + 1}`"
-      aspect-ratio="16/9"
-      cover
-      class="rounded-lg elevation-2 image-hover-effect"
-    >
-      <template v-slot:placeholder>
-        <v-row
-          class="fill-height ma-0"
-          align="center"
-          justify="center"
+      <div
+        v-for="(image, index) in collageImages"
+        :key="index"
+        class="collage-item"
+        @click="openImage(image)"
+      >
+        <v-img
+          :src="image.src"
+          :alt="image.alt || `Design Image ${index + 1}`"
+          aspect-ratio="16/9"
+          cover
+          class="rounded-lg elevation-2 image-hover-effect"
         >
-          <v-progress-circular indeterminate color="brown"></v-progress-circular>
-        </v-row>
-      </template>
-    </v-img>
-  </div>
-</div>
+          <template v-slot:placeholder>
+            <v-row class="fill-height ma-0" align="center" justify="center">
+              <v-progress-circular
+                indeterminate
+                color="brown"
+              ></v-progress-circular>
+            </v-row>
+          </template>
+        </v-img>
+      </div>
+    </div>
 
-<!-- Enlarged Image Dialog -->
-<v-dialog v-model="showDialog" max-width="1800px" max-height="1600px" persistent>
-  <v-card style="background: transparent; box-shadow: none; position: relative;">
-    <!-- Close X Button -->
-    <v-btn
-      icon
-      class="dialog-close-btn"
-      @click="closeDialog"
-      style="position: absolute; top: 12px; right: 12px; z-index: 10; background: rgba(0,0,0,0.4); color: #fff;"
-      size="small"
-      variant="flat"
+    <!-- Enlarged Image Dialog -->
+    <v-dialog
+      v-model="showDialog"
+      max-width="1800px"
+      max-height="1600px"
+      persistent
     >
-      <v-icon>mdi-close</v-icon>
-    </v-btn>
-    <v-img
-      v-if="enlargedImage"
-      :src="enlargedImage.src"
-      :alt="enlargedImage.alt"
-      aspect-ratio="16/9"
-      cover
-      style="max-width: 98vw; max-height: 90vh; border-radius: 16px;"
-    />
-  </v-card>
-</v-dialog>
+      <v-card
+        style="background: transparent; box-shadow: none; position: relative"
+      >
+        <!-- Close X Button -->
+        <v-btn
+          icon
+          class="dialog-close-btn"
+          @click="closeDialog"
+          style="
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.4);
+            color: #fff;
+          "
+          size="small"
+          variant="flat"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+        <v-img
+          v-if="enlargedImage"
+          :src="enlargedImage.src"
+          :alt="enlargedImage.alt"
+          aspect-ratio="16/9"
+          cover
+          style="max-width: 98vw; max-height: 90vh; border-radius: 16px"
+        />
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref } from "vue";
 
 // Enlarging image
 const enlargedImage = ref(null);
@@ -86,7 +99,6 @@ function closeDialog() {
 
 // Reactive array to hold all your image data (links and alt text)
 const collageImages = ref([]);
-
 
 // Configuration for your collage grid
 const numRows = 5;
@@ -106,30 +118,56 @@ const generateCollageData = () => {
   // Example of using Unsplash Source for diverse images (replace with your actual links)
   // These URLs fetch random images tagged with interior design keywords.
   // The &sig= parameter helps get a different image each time if a specific ID isn't used.
-//   for (let i = 0; i < totalImages; i++) {
-//     const seed = i + 1; // Unique seed for Unsplash random images
-//     images.push({
-//       src: `https://www.ikea.com/my/en/rooms/living-room/gallery/a-small-living-space-with-a-balance-of-class-and-comfort-pub67713c90/${seed}`,
-//       alt: `Beautiful interior design ${seed}`,
-//     });
-//   }
+  //   for (let i = 0; i < totalImages; i++) {
+  //     const seed = i + 1; // Unique seed for Unsplash random images
+  //     images.push({
+  //       src: `https://www.ikea.com/my/en/rooms/living-room/gallery/a-small-living-space-with-a-balance-of-class-and-comfort-pub67713c90/${seed}`,
+  //       alt: `Beautiful interior design ${seed}`,
+  //     });
+  //   }
 
   // --- ALTERNATIVE: Directly list your specific image links like this: ---
-  
+
   const specificImageLinks = [
-    { src: 'https://www.ikea.com/images/a-living-room-with-a-white-3-seat-sofa-and-1-5-seat-armchair-1e3d903c4ecd85b235f9b6cb26ebc529.jpg?f=sg', alt: 'Elegant Living Room' },
-    { src: 'https://www.ikea.com/ext/ingkadam/m/7262b24abd9b498f/original/PH200284.jpg?f=sg', alt: 'Elegant Living Room' },
-    { src: 'https://www.ikea.com/ext/ingkadam/m/10391eef320f8ff7/original/PH200234.jpg?f=sg', alt: 'Minimalist Bedroom' },
-    { src: 'https://www.ikea.com/ext/ingkadam/m/62dca52bcd7a8b71/original/PH204399.jpg?f=sg', alt: 'Cozy Kitchen' },
-    { src: 'https://www.ikea.com/ext/ingkadam/m/743476143a3b2310/original/PH202780.jpg?f=sg', alt: 'Living Room' },
-    { src: 'https://www.ikea.com/ext/ingkadam/m/6a1e114fb5b559fc/original/PH201471.jpg?f=sg', alt: 'Versatile Dining Room'},
-    { src: 'https://www.ikea.com/ext/ingkadam/m/4e2450f65149d097/original/PH200257.jpg?f=sg', alt: 'Traditional Dining Room'},
-    { src: 'https://www.ikea.com/images/a-grey-green-taellasen-upholstered-bed-frame-with-privacy-sc-88f435346a1c1f0df3b1a984a24d2334.jpg?f=sg', alt: 'Serene Calm Bedroom'},
+    {
+      src: "https://www.ikea.com/images/a-living-room-with-a-white-3-seat-sofa-and-1-5-seat-armchair-1e3d903c4ecd85b235f9b6cb26ebc529.jpg?f=sg",
+      alt: "Elegant Living Room",
+    },
+    {
+      src: "https://www.ikea.com/ext/ingkadam/m/7262b24abd9b498f/original/PH200284.jpg?f=sg",
+      alt: "Elegant Living Room",
+    },
+    {
+      src: "https://www.ikea.com/ext/ingkadam/m/10391eef320f8ff7/original/PH200234.jpg?f=sg",
+      alt: "Minimalist Bedroom",
+    },
+    {
+      src: "https://www.ikea.com/ext/ingkadam/m/62dca52bcd7a8b71/original/PH204399.jpg?f=sg",
+      alt: "Cozy Kitchen",
+    },
+    {
+      src: "https://www.ikea.com/ext/ingkadam/m/743476143a3b2310/original/PH202780.jpg?f=sg",
+      alt: "Living Room",
+    },
+    {
+      src: "https://www.ikea.com/ext/ingkadam/m/6a1e114fb5b559fc/original/PH201471.jpg?f=sg",
+      alt: "Versatile Dining Room",
+    },
+    {
+      src: "https://www.ikea.com/ext/ingkadam/m/4e2450f65149d097/original/PH200257.jpg?f=sg",
+      alt: "Traditional Dining Room",
+    },
+    {
+      src: "https://www.ikea.com/images/a-grey-green-taellasen-upholstered-bed-frame-with-privacy-sc-88f435346a1c1f0df3b1a984a24d2334.jpg?f=sg",
+      alt: "Serene Calm Bedroom",
+    },
     // ... continue listing all 40 of your image objects ...
-    { src: 'https://www.ikea.com/images/a-3-seat-sofa-a-flatwoven-rug-a-rattan-armchair-with-cushion-0ac620bb7c754ffa215575fc686e4142.jpg?f=sg', alt: 'Modern Office Space' },
+    {
+      src: "https://www.ikea.com/images/a-3-seat-sofa-a-flatwoven-rug-a-rattan-armchair-with-cushion-0ac620bb7c754ffa215575fc686e4142.jpg?f=sg",
+      alt: "Modern Office Space",
+    },
   ];
   images.push(...specificImageLinks);
-  
 
   return images;
 };
@@ -165,7 +203,8 @@ collageImages.value = generateCollageData();
 /* Hover effect for each image */
 .image-hover-effect {
   /* Smooth transition for all animated properties */
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, filter 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out,
+    filter 0.3s ease-in-out;
   cursor: pointer; /* Changes cursor to pointer to indicate interactivity */
 }
 
