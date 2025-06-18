@@ -15,6 +15,7 @@ declare module 'vue' {
     copy: typeof import('./components/AppNav copy.vue')['default']
     CoverflowSlider2: typeof import('./components/CoverflowSlider2.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+    ImageComparisonSlider: typeof import('./components/ImageComparisonSlider.vue')['default']
     ImageContainer: typeof import('./components/imageContainer.vue')['default']
     ImageGallery: typeof import('./components/ImageGallery.vue')['default']
     Output: typeof import('./components/output.vue')['default']

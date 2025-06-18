@@ -17,7 +17,7 @@
           class="ml-4"
           prepend-icon="mdi-view-gallery"
           :ripple="false"
-          to="/gallery"
+          to="/gallery2"
           variant="plain"
         >
           <span class="font-weight-bold text-h6">Gallery</span>
@@ -26,7 +26,7 @@
 
       <!-- Center Tabs -->
 
-      <v-btn :ripple="false" to="landing">
+      <v-btn :ripple="false" to="landing2">
         <!-- <img alt="chair-icon" class="custom-icon mr-2" src="@/assets/chair-icon.png"> -->
         <img
           alt="chair-icon"
