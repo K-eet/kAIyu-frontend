@@ -1,11 +1,5 @@
 <template>
   <AppNav />
-  <!-- <v-container height="50" :fluid="true" style="padding: 0">
-    <v-row>
-        <v-col cols="12"></v-col>
-        <v-col cols="12"></v-col>
-    </v-row>
-  </v-container> -->
 
   <v-container fluid class="my-8">
     <h2 class="text-h4 text-center mb-6 text-grey-darken-8 font-weight-bold">
@@ -108,25 +102,6 @@ const totalImages = numRows * numCols; // Should be 40 images for a 5x8 grid
 // Function to generate the image data
 const generateCollageData = () => {
   const images = [];
-
-  // --- IMPORTANT: Replace these with your actual 40 specific image URLs ---
-  // You can list them manually like the commented example below,
-  // or use a loop if your links follow a predictable pattern.
-  // For this example, I'm using Unsplash Source to get diverse images,
-  // but you should replace these with your own hand-picked links.
-
-  // Example of using Unsplash Source for diverse images (replace with your actual links)
-  // These URLs fetch random images tagged with interior design keywords.
-  // The &sig= parameter helps get a different image each time if a specific ID isn't used.
-  //   for (let i = 0; i < totalImages; i++) {
-  //     const seed = i + 1; // Unique seed for Unsplash random images
-  //     images.push({
-  //       src: `https://www.ikea.com/my/en/rooms/living-room/gallery/a-small-living-space-with-a-balance-of-class-and-comfort-pub67713c90/${seed}`,
-  //       alt: `Beautiful interior design ${seed}`,
-  //     });
-  //   }
-
-  // --- ALTERNATIVE: Directly list your specific image links like this: ---
 
   const specificImageLinks = [
     {

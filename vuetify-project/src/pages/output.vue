@@ -79,28 +79,28 @@
           :class="{ 'd-none': !showSidebar }"
         >
           <v-card flat class="sticky-sidebar">
-            <!-- Master Checkbox for Select All/Deselect All -->
-            <v-checkbox
-              v-model="selectAllProducts"
-              label="Select All"
-              hide-details
-              class="mb-2"
-              :indeterminate="isIndeterminate"
-              color="#E56F2C"
-            >
-            </v-checkbox>
+            <!-- Master Checkbox for Select All/Deselect All and Open Selected Button -->
+            <div class="d-flex justify-space-between align-center mb-4">
+              <v-checkbox
+                v-model="selectAllProducts"
+                label="Select All"
+                hide-details
+                class="mt-0 pt-0"
+                :indeterminate="isIndeterminate"
+                color="#E56F2C"
+              >
+              </v-checkbox>
 
-            <v-btn
-              v-if="selectedCount > 0"
-              fab
-              dark
-              class="mb-4"
-              color="#E6D6C2"
-              @click="openSelectedProducts"
-              title="Open all selected products in new tabs"
-            >
-              <div>Open selected</div>
-            </v-btn>
+              <v-btn
+                v-if="selectedCount > 0"
+                x-small
+                color="#E6D6C2"
+                @click="openSelectedProducts"
+                title="Open all selected products in new tabs"
+              >
+                <div class="text-body-1">Open selected</div>
+              </v-btn>
+            </div>
 
             <div class="scrollable-products" ref="productList">
               <v-list three-line>
@@ -185,7 +185,7 @@ export default {
       showSidebar: true,
       hover: false,
       highlightedProduct: null,
-      selectAllProducts: false, // New data property for the master checkbox
+      selectAllProducts: false,
       recommendedProducts: [
         // Map over your existing products to add a 'selected' property
         {
@@ -399,8 +399,6 @@ export default {
       } else if (noneSelected) {
         this.selectAllProducts = false;
       } else {
-        // If some are selected but not all, the master checkbox's v-model should be false,
-        // but its indeterminate state will be true due to the computed property.
         this.selectAllProducts = false;
       }
     },
@@ -445,11 +443,6 @@ export default {
 }
 
 .sidebar-col .v-list::-webkit-scrollbar {
-  display: none;
-}
-
-/* Custom scrollbar */
-.scrollable-products::-webkit-scrollbar {
   display: none;
 }
 
