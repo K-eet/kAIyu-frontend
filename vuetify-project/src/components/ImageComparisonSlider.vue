@@ -1,197 +1,184 @@
+<!-- components/ImageComparisonSlider.vue -->
 <template>
-  <div class="image-comparison-slider">
-    <div class="image-wrapper before-image">
-      <img :src="beforeImageSrc" alt="Before" />
-      <div class="label top-left">Before</div>
-    </div>
+  <div class="transform-slider" ref="sliderRef">
+    <!-- After Image (left side) -->
+    <img
+      :src="after"
+      class="slider-img"
+      :style="{ clipPath: `inset(0 0 0 ${sliderPosition}% )` }"
+      alt="After"
+    />
+    <!-- Before Image (right side) -->
+    <img
+      :src="before"
+      class="slider-img"
+      :style="{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }"
+      alt="Before"
+    />
+
+    <!-- Slider Handle -->
     <div
-      class="image-wrapper after-image"
-      :style="{ clipPath: `inset(0 ${100 - sliderValue}% 0 0)` }"
+      class="slider-handle"
+      :style="{ left: `${sliderPosition}%` }"
+      @mousedown="startDrag"
+      @touchstart.prevent="startDrag"
     >
-      <img :src="afterImageSrc" alt="After" />
-      <div class="label top-right">After</div>
+      <span class="slider-circle">
+        <span class="slider-arrow">&#60;</span>
+        <span class="slider-arrow">&#62;</span>
+      </span>
     </div>
 
-    <input
-      type="range"
-      min="0"
-      max="100"
-      v-model="sliderValue"
-      class="slider"
-      @input="updateSlider"
-    />
-    <div class="slider-line" :style="{ left: sliderValue + '%' }"></div>
-    <div class="slider-handle" :style="{ left: sliderValue + '%' }">
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M10 6L6 10L10 14"
-          stroke="white"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M14 18L18 14L14 10"
-          stroke="white"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
+    <!-- Centered Content Slot -->
+    <div class="slider-center-content">
+      <slot />
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: "ImageComparisonSlider",
-  props: {
-    beforeImageSrc: {
-      type: String,
-      required: true,
-    },
-    afterImageSrc: {
-      type: String,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      sliderValue: 50, // Initial position of the slider (50% for center)
-    };
-  },
-  methods: {
-    updateSlider(event) {
-      this.sliderValue = parseFloat(event.target.value);
-    },
-  },
-};
+<script setup>
+import { ref, onBeforeUnmount } from "vue";
+
+const props = defineProps({
+  before: { type: String, required: true },
+  after: { type: String, required: true },
+  initial: { type: Number, default: 1 }, // percent
+});
+
+const sliderPosition = ref(props.initial);
+const dragging = ref(false);
+const sliderRef = ref(null);
+
+function onDrag(e) {
+  if (!dragging.value) return;
+  let clientX;
+  if (e.touches) {
+    clientX = e.touches[0].clientX;
+  } else {
+    clientX = e.clientX;
+  }
+  const rect = sliderRef.value.getBoundingClientRect();
+  let percent = ((clientX - rect.left) / rect.width) * 100;
+  percent = Math.max(0, Math.min(100, percent));
+  sliderPosition.value = percent;
+}
+
+function startDrag(e) {
+  dragging.value = true;
+  document.addEventListener("mousemove", onDrag);
+  document.addEventListener("touchmove", onDrag);
+  document.addEventListener("mouseup", stopDrag);
+  document.addEventListener("touchend", stopDrag);
+}
+
+function stopDrag() {
+  dragging.value = false;
+  document.removeEventListener("mousemove", onDrag);
+  document.removeEventListener("touchmove", onDrag);
+  document.removeEventListener("mouseup", stopDrag);
+  document.removeEventListener("touchend", stopDrag);
+}
+
+onBeforeUnmount(stopDrag);
 </script>
 
 <style scoped>
-.image-comparison-slider {
+.transform-slider {
   position: relative;
   width: 100%;
-  max-width: 800px; /* Adjust as needed */
-  aspect-ratio: 16/9; /* Maintain aspect ratio */
+  max-width: 1800px; /* Adjusted from original to fit better in a dynamic width */
+  aspect-ratio: 16/9;
+  margin: 0 auto;
   overflow: hidden;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background: #222;
+  user-select: none;
+  height: 100%; /* Make it fill the parent height */
 }
-
-.image-wrapper {
+.slider-img {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  transition: clip-path 0.15s;
+  z-index: 1;
 }
-
-.image-wrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Ensures images cover the area without distortion */
-  display: block;
-}
-
-.after-image {
-  /* Using clip-path for the sliding effect */
-  /* The clipPath property will be updated dynamically by the slider */
-  clip-path: inset(
-    0 50% 0 0
-  ); /* Initial clip to show half of the after image */
-}
-
-.slider {
+.slider-label {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  -webkit-appearance: none; /* Remove default slider styles */
-  appearance: none;
-  background: transparent;
-  outline: none;
-  margin: 0;
-  cursor: ew-resize;
-  z-index: 10;
+  top: 24px;
+  padding: 8px 22px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  z-index: 3;
+  pointer-events: none;
 }
-
-/* Hide thumb for default range input */
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 0;
-  height: 0;
-  background: transparent;
-  cursor: ew-resize;
+.after-label {
+  left: 24px;
 }
-
-.slider::-moz-range-thumb {
-  width: 0;
-  height: 0;
-  background: transparent;
-  border: none;
-  cursor: ew-resize;
+.before-label {
+  right: 24px;
 }
-
-.slider-line {
+.slider-handle {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 2px; /* Thickness of the slider line */
-  background-color: white;
-  transform: translateX(-50%); /* Center the line on the slider handle */
-  z-index: 9;
-  pointer-events: none; /* Make sure it doesn't block slider interaction */
-}
-
-.slider-handle {
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%); /* Center the handle */
-  width: 40px; /* Width of the handle */
-  height: 40px; /* Height of the handle */
-  background-color: #333; /* Dark background for visibility */
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: ew-resize;
-  z-index: 11;
-  pointer-events: none; /* Make sure it doesn't block slider interaction */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.slider-handle svg {
-  width: 24px;
-  height: 24px;
-  color: white; /* Color of the arrows */
-}
-
-.label {
-  position: absolute;
-  padding: 8px 12px;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  font-size: 14px;
-  border-radius: 4px;
+  width: 44px;
+  margin-left: -22px;
   z-index: 5;
+  cursor: ew-resize;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  left: 50%;
+  transition: left 0.15s;
 }
-
-.top-left {
-  top: 15px;
-  left: 15px;
+.slider-circle {
+  width: 44px;
+  height: 44px;
+  background: #fff;
+  border-radius: 50%;
+  border: 2px solid #4a2511;
+  box-shadow: 0 2px 8px #0002;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
-
-.top-right {
-  top: 15px;
-  right: 15px;
+.slider-arrow {
+  color: #4a2511;
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin: 0 2px;
+  user-select: none;
+}
+.slider-center-content {
+  position: absolute;
+  top: 85%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  color: #fff;
+  text-align: center;
+  width: 90%;
+  pointer-events: none;
+  text-shadow: 0 2px 8px #0007;
+}
+@media (max-width: 900px) {
+  .transform-slider {
+    max-width: 100vw;
+  }
+  .slider-label {
+    font-size: 0.95rem;
+    padding: 6px 14px;
+  }
+  .slider-handle,
+  .slider-circle {
+    width: 36px;
+    height: 36px;
+  }
 }
 </style>

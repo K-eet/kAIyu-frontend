@@ -4,48 +4,74 @@
     <v-container fill-height>
       <v-row align="center" justify="center">
         <!-- Main Product Image (Left Side) -->
-        <v-col cols="12" :md="showSidebar ? 9 : 12" lg="9">
+        <v-col
+          cols="12"
+          :md="showImageComparison ? 12 : showSidebar ? 9 : 12"
+          lg="9"
+        >
           <div style="position: relative; height: 100%">
             <v-card elevation="5" rounded="lg" style="height: 100%">
-              <v-card>
-                <div style="position: relative">
-                  <v-img
-                    cover
-                    height="800"
-                    max-height="80vh"
-                    src="https://www.ikea.com/ext/ingkadam/m/7262b24abd9b498f/original/PH200284.jpg?f=sg"
-                  ></v-img>
-                  <!-- Hotspot buttons in dialog -->
-                  <div class="hotspot-container">
-                    <v-btn
-                      v-for="(spot, index) in hotspots"
-                      :key="index"
-                      class="hotspot-button"
-                      :class="{
-                        'hotspot-active': highlightedProduct === spot.productId,
-                      }"
-                      color="black"
-                      icon
-                      size="small"
-                      :style="{ left: spot.x + '%', top: spot.y + '%' }"
-                      @click.stop="toggleProductCheckbox(spot.productId)"
-                    >
-                      <v-icon color="white">mdi-circle</v-icon>
-                      <v-tooltip activator="parent" location="top">
-                        {{ spot.tooltip }}
-                      </v-tooltip>
-                    </v-btn>
+              <!-- Conditional rendering for product view or image comparison -->
+              <div v-if="!showImageComparison">
+                <v-card>
+                  <div style="position: relative">
+                    <v-img
+                      cover
+                      height="800"
+                      max-height="80vh"
+                      src="https://www.ikea.com/ext/ingkadam/m/7262b24abd9b498f/original/PH200284.jpg?f=sg"
+                    ></v-img>
+                    <!-- Hotspot buttons in dialog -->
+                    <div class="hotspot-container">
+                      <v-btn
+                        v-for="(spot, index) in hotspots"
+                        :key="index"
+                        class="hotspot-button"
+                        :class="{
+                          'hotspot-active':
+                            highlightedProduct === spot.productId,
+                        }"
+                        color="black"
+                        icon
+                        size="small"
+                        :style="{ left: spot.x + '%', top: spot.y + '%' }"
+                        @click.stop="toggleProductCheckbox(spot.productId)"
+                      >
+                        <v-icon color="white">mdi-circle</v-icon>
+                        <v-tooltip activator="parent" location="top">
+                          {{ spot.tooltip }}
+                        </v-tooltip>
+                      </v-btn>
+                    </div>
                   </div>
-                </div>
-              </v-card>
+                </v-card>
+              </div>
+              <div v-else>
+                <!-- Image Comparison Slider -->
+                <ImageComparisonSlider
+                  before="src/assets/before.png"
+                  after="src/assets/after.png"
+                  :initial="50"
+                  style="width: 100%; height: 80vh"
+                >
+                  <h2
+                    style="
+                      color: white;
+                      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+                    "
+                  >
+                    Drag to see the transformation!
+                  </h2>
+                </ImageComparisonSlider>
+              </div>
 
-              <!-- Toggle Button (Positioned on image) -->
+              <!-- Toggle Sidebar Button (Existing) -->
               <v-btn
                 color="#284B63"
                 style="
                   position: absolute;
                   top: 50%;
-                  right: 10px; /* Reduced right spacing for a tighter fit */
+                  right: 10px;
                   transform: translateY(-50%);
                   z-index: 100;
                   opacity: 0.95;
@@ -66,6 +92,40 @@
                   showSidebar ? "mdi-chevron-right" : "mdi-format-list-bulleted"
                 }}</v-icon>
               </v-btn>
+
+              <!-- Toggle Image Comparison Button (NEW) -->
+              <v-btn
+                color="#284B63"
+                style="
+                  position: absolute;
+                  top: 10px; /* Position at top */
+                  right: 10px; /* Aligned with sidebar toggle */
+                  z-index: 100;
+                  opacity: 0.95;
+                  background-color: #e56f2c !important; /* Distinct color */
+                  min-width: 0;
+                  width: 40px; /* Slightly larger */
+                  height: 40px;
+                  padding: 0;
+                  border-radius: 4px;
+                  transition: opacity 0.3s ease;
+                "
+                @click="toggleImageComparisonMode"
+                @mouseover="hoverComparison = true"
+                @mouseleave="hoverComparison = false"
+                :style="{ opacity: hoverComparison ? 0.9 : 0.65 }"
+                :title="
+                  showImageComparison
+                    ? 'Show Product Details'
+                    : 'Show Before/After Comparison'
+                "
+              >
+                <v-icon>{{
+                  showImageComparison
+                    ? "mdi-cube-outline"
+                    : "mdi-image-multiple"
+                }}</v-icon>
+              </v-btn>
             </v-card>
           </div>
         </v-col>
@@ -76,7 +136,7 @@
           md="3"
           lg="3"
           class="sidebar-col"
-          :class="{ 'd-none': !showSidebar }"
+          :class="{ 'd-none': !showSidebar || showImageComparison }"
         >
           <v-card flat class="sticky-sidebar">
             <!-- Master Checkbox for Select All/Deselect All and Open Selected Button -->
@@ -93,12 +153,14 @@
 
               <v-btn
                 v-if="selectedCount > 0"
-                x-small
+                fab
+                dark
+                small
                 color="#E6D6C2"
                 @click="openSelectedProducts"
                 title="Open all selected products in new tabs"
               >
-                <div class="text-body-1">Open selected</div>
+                <div class="text-caption">Open selected</div>
               </v-btn>
             </div>
 
@@ -179,11 +241,18 @@
 </template>
 
 <script>
+import ImageComparisonSlider from "@/components/ImageComparisonSlider.vue"; // Adjust path as needed
+
 export default {
+  components: {
+    ImageComparisonSlider,
+  },
   data() {
     return {
       showSidebar: true,
+      showImageComparison: false, // NEW: controls which view is active
       hover: false,
+      hoverComparison: false, // NEW: for the comparison button hover state
       highlightedProduct: null,
       selectAllProducts: false,
       recommendedProducts: [
@@ -310,6 +379,16 @@ export default {
         product.selected = newValue;
       });
     },
+    // Watch for changes in showImageComparison to manage sidebar visibility
+    showImageComparison(newValue) {
+      if (newValue) {
+        this.showSidebar = false; // Hide sidebar when comparison mode is active
+      }
+      // If you want the sidebar to reappear when switching back,
+      // you might store its previous state or default to true.
+      // For simplicity, we'll just let it be controlled by its own toggle
+      // when switching back to product view.
+    },
   },
 
   methods: {
@@ -365,8 +444,8 @@ export default {
     },
 
     scrollToProduct(productId) {
-      // Show sidebar if hidden
-      if (!this.showSidebar) {
+      // Show sidebar if hidden (and not in image comparison mode)
+      if (!this.showSidebar && !this.showImageComparison) {
         this.showSidebar = true;
       }
 
@@ -401,6 +480,10 @@ export default {
       } else {
         this.selectAllProducts = false;
       }
+    },
+    // NEW: Method to toggle image comparison mode
+    toggleImageComparisonMode() {
+      this.showImageComparison = !this.showImageComparison;
     },
   },
 };
@@ -488,9 +571,9 @@ export default {
 }
 
 /* Adjustments for checkbox layout */
-.v-list-item__content {
+/* .v-list-item__content {
   padding: 0;
-}
+} */ /* This might interfere with other list items, consider if needed */
 
 .hotspot-container {
   position: absolute;
