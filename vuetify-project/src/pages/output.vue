@@ -28,7 +28,7 @@
                       icon
                       size="small"
                       :style="{ left: spot.x + '%', top: spot.y + '%' }"
-                      @click.stop="scrollToProduct(spot.productId)"
+                      @click.stop="toggleProductCheckbox(spot.productId)"
                     >
                       <v-icon color="white">mdi-circle</v-icon>
                       <v-tooltip activator="parent" location="top">
@@ -41,24 +41,26 @@
 
               <!-- Toggle Button (Positioned on image) -->
               <v-btn
-                fab
-                dark
-                small
                 color="#284B63"
                 style="
                   position: absolute;
-                  bottom: 20px;
-                  right: 20px;
+                  top: 50%;
+                  right: 10px; /* Reduced right spacing for a tighter fit */
+                  transform: translateY(-50%);
                   z-index: 100;
-                  opacity: 0.85;
-                  background-color: rgba(60, 110, 113, 0.8) !important;
-                  backdrop-filter: blur(2px);
+                  opacity: 0.95;
+                  background-color: #4a2511 !important;
+                  min-width: 0;
+                  width: 30px;
+                  height: 60px;
+                  padding: 0;
+                  border-radius: 4px;
                   transition: opacity 0.3s ease;
                 "
                 @click="showSidebar = !showSidebar"
                 @mouseover="hover = true"
                 @mouseleave="hover = false"
-                :style="{ opacity: hover ? 0.7 : 0.4 }"
+                :style="{ opacity: hover ? 0.9 : 0.65 }"
               >
                 <v-icon>{{
                   showSidebar ? "mdi-chevron-right" : "mdi-format-list-bulleted"
@@ -84,7 +86,7 @@
               hide-details
               class="mb-2"
               :indeterminate="isIndeterminate"
-              color="#284B63"
+              color="#E56F2C"
             >
             </v-checkbox>
 
@@ -92,14 +94,13 @@
               v-if="selectedCount > 0"
               fab
               dark
-              color="#284B63"
+              class="mb-4"
+              color="#E6D6C2"
               @click="openSelectedProducts"
               title="Open all selected products in new tabs"
             >
               <div>Open selected</div>
             </v-btn>
-
-            <v-divider></v-divider>
 
             <div class="scrollable-products" ref="productList">
               <v-list three-line>
@@ -140,7 +141,7 @@
                           hide-details
                           class="ml-auto mt-0 pt-0"
                           density="compact"
-                          color="#284B63"
+                          color="#E56F2C"
                           @click.stop
                           @change="handleIndividualCheckboxChange"
                         ></v-checkbox>
@@ -310,7 +311,36 @@ export default {
       });
     },
   },
+
   methods: {
+    toggleProductCheckbox(productId) {
+      // Find the product in the recommendedProducts array
+      const product = this.recommendedProducts.find((p) => p.id === productId);
+      if (product) {
+        // Toggle the selected state
+        product.selected = !product.selected;
+
+        // Update the selectAllProducts state
+        this.updateSelectAllState();
+
+        // Scroll to the product (optional)
+        this.scrollToProduct(productId);
+      }
+    },
+
+    updateSelectAllState() {
+      const allSelected = this.recommendedProducts.every((p) => p.selected);
+      const noneSelected = this.recommendedProducts.every((p) => !p.selected);
+
+      if (allSelected) {
+        this.selectAllProducts = true;
+      } else if (noneSelected) {
+        this.selectAllProducts = false;
+      } else {
+        this.selectAllProducts = false;
+      }
+    },
+
     openSelectedProducts() {
       const selectedProducts = this.recommendedProducts.filter(
         (p) => p.selected

@@ -411,7 +411,7 @@ const generateDesign = () => {
 }
 
 .selected-design-chip {
-  background-color: #3c6e71 !important;
+  background-color: #e56f2c !important;
 }
 
 .hotspot-container {
