@@ -14,11 +14,9 @@
       <h2>Your vision, our expertise</h2>
     </div>
   </div>
-  <!-- ...rest of your page... -->
 
   <v-container height="80" :fluid="true" style="padding: 0"></v-container>
 
-  <!-- How it works -->
   <v-container
     fluid
     class="how-it-works-section py-12"
@@ -109,14 +107,6 @@
     </v-container>
 
     <v-container fluid style="background: #e6d6c2">
-      <!-- <Transform
-    :before-image="beforeImg"
-    after-image="https://www.ikea.com/ext/ingkadam/m/7262b24abd9b498f/original/PH200284.jpg?f=sg"
-    before-alt="Before Renovation"
-    after-alt="After Renovation"
-    :initial="50"
-/> -->
-
       <Transform :before="beforeImg" :after="afterImg">
         <h1>See Your Room Transform</h1>
         <p>
@@ -153,10 +143,7 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import CoverflowSlider from "@/components/CoverflowSlider2.vue";
 import CoverflowSlider2 from "@/components/CoverflowSlider2.vue";
-import BeforeAfterSlider from "@/components/BeforeAfterSlide.vue";
-
 import Transform from "@/components/Transform.vue";
 import beforeImg from "@/assets/before.png";
 import afterImg from "@/assets/after.png";
@@ -282,12 +269,6 @@ onBeforeUnmount(() => {
   text-align: center;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
-/* .hero-content h1,
-.hero-content h2 {
-  font-family: 'Inter', sans-serif;
-  font-size:2.8rem;
-} */
-
 .how-it-works-section {
   background: #f7f7f7;
 }

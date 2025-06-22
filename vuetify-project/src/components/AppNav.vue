@@ -26,7 +26,7 @@
 
       <!-- Center Tabs -->
 
-      <v-btn :ripple="false" to="landing2">
+      <v-btn :ripple="false" to="landing3" variant="plain" class="mr-12">
         <!-- <img alt="chair-icon" class="custom-icon mr-2" src="@/assets/chair-icon.png"> -->
         <img
           alt="chair-icon"
@@ -117,7 +117,6 @@ function toggleTheme() {
 .custom-icon {
   height: 20%;
   width: 20%;
-  transition: all 0.3s ease;
   object-fit: cover;
   vertical-align: middle;
 }

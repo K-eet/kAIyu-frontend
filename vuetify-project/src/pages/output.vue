@@ -78,17 +78,28 @@
         >
           <v-card flat class="sticky-sidebar">
             <!-- Master Checkbox for Select All/Deselect All -->
-            <div class="px-4 py-2">
-              <v-checkbox
-                v-model="selectAllProducts"
-                label="Select All Products"
-                hide-details
-                class="mb-2"
-                :indeterminate="isIndeterminate"
-                color="#284B63"
-              ></v-checkbox>
-              <v-divider></v-divider>
-            </div>
+            <v-checkbox
+              v-model="selectAllProducts"
+              label="Select All"
+              hide-details
+              class="mb-2"
+              :indeterminate="isIndeterminate"
+              color="#284B63"
+            >
+            </v-checkbox>
+
+            <v-btn
+              v-if="selectedCount > 0"
+              fab
+              dark
+              color="#284B63"
+              @click="openSelectedProducts"
+              title="Open all selected products in new tabs"
+            >
+              <div>Open selected</div>
+            </v-btn>
+
+            <v-divider></v-divider>
 
             <div class="scrollable-products" ref="productList">
               <v-list three-line>
@@ -122,6 +133,7 @@
                         >
                           {{ product.name }}
                         </v-list-item-title>
+
                         <!-- Individual Product Checkbox -->
                         <v-checkbox
                           v-model="product.selected"
@@ -286,6 +298,9 @@ export default {
         selectedCount > 0 && selectedCount < this.recommendedProducts.length
       );
     },
+    selectedCount() {
+      return this.recommendedProducts.filter((p) => p.selected).length;
+    },
   },
   watch: {
     // Watch for changes in the master "Select All" checkbox
@@ -296,6 +311,29 @@ export default {
     },
   },
   methods: {
+    openSelectedProducts() {
+      const selectedProducts = this.recommendedProducts.filter(
+        (p) => p.selected
+      );
+      const count = selectedProducts.length;
+
+      if (count > 3) {
+        if (
+          !confirm(
+            `This will open ${count} new tabs. Continue? (If multiple tabs do not open, disable popup block.)`
+          )
+        ) {
+          return;
+        }
+      }
+
+      selectedProducts.forEach((product, index) => {
+        setTimeout(() => {
+          window.open(product.link, "_blank");
+        }, index * 100);
+      });
+    },
+
     scrollToProduct(productId) {
       // Show sidebar if hidden
       if (!this.showSidebar) {
