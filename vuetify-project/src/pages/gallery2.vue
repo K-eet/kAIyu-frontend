@@ -6,7 +6,7 @@
       Your Design Gallery
     </h2>
     <p class="text-center text-subtitle-1 mb-10 text-medium-emphasis">
-      Explore your curated collection of beautiful interior designs
+      Browse your design history
     </p>
 
     <div class="image-collage">
@@ -136,7 +136,6 @@ const generateCollageData = () => {
       src: "https://www.ikea.com/images/a-grey-green-taellasen-upholstered-bed-frame-with-privacy-sc-88f435346a1c1f0df3b1a984a24d2334.jpg?f=sg",
       alt: "Serene Calm Bedroom",
     },
-    // ... continue listing all 40 of your image objects ...
     {
       src: "https://www.ikea.com/images/a-3-seat-sofa-a-flatwoven-rug-a-rattan-armchair-with-cushion-0ac620bb7c754ffa215575fc686e4142.jpg?f=sg",
       alt: "Modern Office Space",

@@ -61,6 +61,7 @@
 
               <!-- Toggle Sidebar Button -->
               <v-btn
+                v-if="!showImageComparison"
                 class="toggle-sidebar-btn"
                 @click="showSidebar = !showSidebar"
                 @mouseover="hover = true"

@@ -41,7 +41,7 @@
 }
 
 .hotspot-active {
-  background: rgba(40, 75, 99, 0.8) !important;
+  background: #E56F2C !important;
   border: 2px solid #e6d6c2 !important;
   transform: translate(-50%, -50%) scale(1.3) !important;
 }
