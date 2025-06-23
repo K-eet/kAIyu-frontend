@@ -200,7 +200,7 @@
                     prepend-icon="mdi-creation"
                     rounded="lg"
                     size="large"
-                    to="/output"
+                    to="/productviewer"
                   >
                     GENERATE DESIGN
                   </v-btn>

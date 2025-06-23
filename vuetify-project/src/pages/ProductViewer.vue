@@ -70,6 +70,9 @@
                 <v-icon>{{
                   showSidebar ? "mdi-chevron-right" : "mdi-format-list-bulleted"
                 }}</v-icon>
+                <v-tooltip activator="parent" location="top">
+                  {{ showSidebar ? "Hide product list" : "Show product list" }}
+                </v-tooltip>
               </v-btn>
 
               <!-- Toggle Image Comparison Button -->
@@ -79,17 +82,19 @@
                 @mouseover="hoverComparison = true"
                 @mouseleave="hoverComparison = false"
                 :style="{ opacity: hoverComparison ? 0.9 : 0.65 }"
-                :title="
-                  showImageComparison
-                    ? 'Show Product Details'
-                    : 'Show Before/After Comparison'
-                "
               >
                 <v-icon>{{
                   showImageComparison
                     ? "mdi-cube-outline"
                     : "mdi-image-multiple"
                 }}</v-icon>
+                <v-tooltip activator="parent" location="bottom">
+                  {{
+                    showImageComparison
+                      ? "Show product view"
+                      : "Show before/after comparison"
+                  }}
+                </v-tooltip>
               </v-btn>
             </v-card>
           </div>
