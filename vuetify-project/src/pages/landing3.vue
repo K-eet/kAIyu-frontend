@@ -131,7 +131,7 @@
       <br />
       <div>
         <h6 class="inspiration-title text-center">
-          Are you looking for inspirations?
+          Are you looking for inspiration?
         </h6>
       </div>
       <br />

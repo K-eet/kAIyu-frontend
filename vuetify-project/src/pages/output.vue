@@ -93,18 +93,18 @@
                 }}</v-icon>
               </v-btn>
 
-              <!-- Toggle Image Comparison Button (NEW) -->
+              <!-- Toggle Image Comparison Button -->
               <v-btn
                 color="#284B63"
                 style="
                   position: absolute;
-                  top: 10px; /* Position at top */
-                  right: 10px; /* Aligned with sidebar toggle */
+                  top: 10px;
+                  right: 10px;
                   z-index: 100;
                   opacity: 0.95;
-                  background-color: #e56f2c !important; /* Distinct color */
+                  background-color: #4a2511 !important;
                   min-width: 0;
-                  width: 40px; /* Slightly larger */
+                  width: 40px;
                   height: 40px;
                   padding: 0;
                   border-radius: 4px;
@@ -160,7 +160,7 @@
                 @click="openSelectedProducts"
                 title="Open all selected products in new tabs"
               >
-                <div class="text-caption">Open selected</div>
+                <div class="text-body-1">Open selected</div>
               </v-btn>
             </div>
 
@@ -220,13 +220,14 @@
                       <!-- Shop Now Button -->
                       <v-btn
                         x-small
-                        class="mt-3"
+                        class="mt-3 mb-2"
                         :href="product.link"
                         target="_blank"
                         color="#E6D6C2"
                         @click.stop
                       >
-                        Shop <v-icon right>mdi-arrow-right</v-icon>
+                        <div>Shop</div>
+                        <v-icon right>mdi-arrow-right</v-icon>
                       </v-btn>
                     </v-col>
                   </v-row>
@@ -249,10 +250,10 @@ export default {
   },
   data() {
     return {
-      showSidebar: true,
-      showImageComparison: false, // NEW: controls which view is active
+      showSidebar: false,
+      showImageComparison: false, // controls which view is active
       hover: false,
-      hoverComparison: false, // NEW: for the comparison button hover state
+      hoverComparison: false, // for the comparison button hover state
       highlightedProduct: null,
       selectAllProducts: false,
       recommendedProducts: [
@@ -384,10 +385,6 @@ export default {
       if (newValue) {
         this.showSidebar = false; // Hide sidebar when comparison mode is active
       }
-      // If you want the sidebar to reappear when switching back,
-      // you might store its previous state or default to true.
-      // For simplicity, we'll just let it be controlled by its own toggle
-      // when switching back to product view.
     },
   },
 
@@ -426,7 +423,7 @@ export default {
       );
       const count = selectedProducts.length;
 
-      if (count > 3) {
+      if (count > 2) {
         if (
           !confirm(
             `This will open ${count} new tabs. Continue? (If multiple tabs do not open, disable popup block.)`
@@ -481,7 +478,7 @@ export default {
         this.selectAllProducts = false;
       }
     },
-    // NEW: Method to toggle image comparison mode
+    // Method to toggle image comparison mode
     toggleImageComparisonMode() {
       this.showImageComparison = !this.showImageComparison;
     },

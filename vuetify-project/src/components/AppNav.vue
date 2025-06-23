@@ -10,7 +10,7 @@
           to="/generate"
           variant="plain"
         >
-          <span class="font-weight-bold text-h6"> Generate</span>
+          <span class="font-weight-bold text-body-1"> Generate</span>
         </v-btn>
 
         <v-btn
@@ -20,7 +20,7 @@
           to="/gallery2"
           variant="plain"
         >
-          <span class="font-weight-bold text-h6">Gallery</span>
+          <span class="font-weight-bold text-body-1">Gallery</span>
         </v-btn>
       </template>
 
@@ -47,7 +47,7 @@
           variant="plain"
           @click="dialog = !dialog"
         >
-          <span class="font-weight-bold text-h6">Sign-Up</span>
+          <span class="font-weight-bold text-body-1">Sign-Up</span>
         </v-btn>
 
         <!-- Avatar dropdown -->
