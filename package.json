@@ -4,6 +4,7 @@
     "sass-loader": "^16.0.5"
   },
   "dependencies": {
+    "pinia": "^3.0.3",
     "swiper": "^11.2.8"
   }
 }

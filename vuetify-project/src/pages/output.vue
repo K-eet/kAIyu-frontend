@@ -242,7 +242,7 @@
 </template>
 
 <script>
-import ImageComparisonSlider from "@/components/ImageComparisonSlider.vue"; // Adjust path as needed
+import ImageComparisonSlider from "@/components/ImageComparisonSlider.vue";
 
 export default {
   components: {
