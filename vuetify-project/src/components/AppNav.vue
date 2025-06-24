@@ -3,23 +3,11 @@
     <v-toolbar>
       <!-- Logo + App Name  -->
       <template v-slot:prepend>
-        <v-btn
-          class="ml-4"
-          prepend-icon="mdi-creation"
-          :ripple="false"
-          to="/generate"
-          variant="plain"
-        >
+        <v-btn class="ml-4" :ripple="false" to="/generate" variant="plain">
           <span class="font-weight-bold text-body-1"> Generate</span>
         </v-btn>
 
-        <v-btn
-          class="ml-4"
-          prepend-icon="mdi-view-gallery"
-          :ripple="false"
-          to="/gallery2"
-          variant="plain"
-        >
+        <v-btn class="ml-4" :ripple="false" to="/gallery2" variant="plain">
           <span class="font-weight-bold text-body-1">Gallery</span>
         </v-btn>
       </template>

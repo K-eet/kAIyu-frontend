@@ -26,9 +26,11 @@ declare module 'vue-router/auto-routes' {
     '/corePageKevin-v4': RouteRecordInfo<'/corePageKevin-v4', '/corePageKevin-v4', Record<never, never>, Record<never, never>>,
     '/gallery2': RouteRecordInfo<'/gallery2', '/gallery2', Record<never, never>, Record<never, never>>,
     '/generate': RouteRecordInfo<'/generate', '/generate', Record<never, never>, Record<never, never>>,
+    '/HowItWorks': RouteRecordInfo<'/HowItWorks', '/HowItWorks', Record<never, never>, Record<never, never>>,
     '/landing2': RouteRecordInfo<'/landing2', '/landing2', Record<never, never>, Record<never, never>>,
     '/landing3': RouteRecordInfo<'/landing3', '/landing3', Record<never, never>, Record<never, never>>,
     '/output': RouteRecordInfo<'/output', '/output', Record<never, never>, Record<never, never>>,
     '/ProductViewer': RouteRecordInfo<'/ProductViewer', '/ProductViewer', Record<never, never>, Record<never, never>>,
+    '/ProductViewercopy': RouteRecordInfo<'/ProductViewercopy', '/ProductViewercopy', Record<never, never>, Record<never, never>>,
   }
 }
