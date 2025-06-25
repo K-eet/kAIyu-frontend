@@ -176,6 +176,20 @@ export const useProductStore = defineStore('product', () => {
     }
     return productId; // Return ID for component to handle scrolling
   };
+
+  function resetStore() {
+  showSidebar.value = false;
+  showImageComparison.value = false;
+  hover.value = false;
+  hoverComparison.value = false;
+  highlightedProduct.value = null;
+  selectAllProducts.value = false;
+  
+  // Reset all products to unselected
+  recommendedProducts.value.forEach(product => {
+    product.selected = false;
+  });
+}
   
   //watch
   watch(selectAllProducts, (newValue) => {
@@ -195,6 +209,7 @@ export const useProductStore = defineStore('product', () => {
     hotspots,
     isIndeterminate,
     selectedCount,
+    resetStore,
     setHighlightedProduct,
     prepareScrollToProduct,
     toggleProductCheckbox,

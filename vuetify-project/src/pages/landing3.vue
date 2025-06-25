@@ -2,13 +2,7 @@
   <AppNav />
 
   <div class="landing-hero" ref="heroSection">
-    <img
-      ref="heroImg"
-      :src="heroImage"
-      alt="Hero"
-      class="hero-img"
-      :style="{ transform: `scale(${scale})` }"
-    />
+    <img ref="heroImg" :src="heroImage" alt="Hero" class="hero-img" />
     <div class="hero-content">
       <h1>Welcome to kAIyu</h1>
       <h2>Your vision, our expertise</h2>
@@ -17,55 +11,12 @@
 
   <v-container height="80" :fluid="true" style="padding: 0"></v-container>
 
-  <v-container
-    fluid
-    class="how-it-works-section py-12"
-    style="background: #e6d6c2"
-  >
-    <v-row justify="center" class="mb-8">
-      <v-col cols="12" class="text-center">
-        <h2 class="how-title">How It Works</h2>
-      </v-col>
-    </v-row>
-    <v-row justify="center" align="stretch" class="how-steps-row" no-gutters>
-      <v-col cols="12" md="4" class="d-flex justify-center mb-6 mb-md-0">
-        <div class="how-step-card">
-          <div class="how-step-circle">1</div>
-          <div class="how-step-title">Upload Your Room</div>
-          <div class="how-step-desc">
-            Take a photo of your empty room and upload it to our platform
-          </div>
-        </div>
-      </v-col>
-      <v-col cols="12" md="4" class="d-flex justify-center mb-6 mb-md-0">
-        <div class="how-step-card">
-          <div class="how-step-circle">2</div>
-          <div class="how-step-title">Choose Your Style</div>
-          <div class="how-step-desc">
-            Select from various styles for your type of rooms
-          </div>
-        </div>
-      </v-col>
-      <v-col cols="12" md="4" class="d-flex justify-center">
-        <div class="how-step-card">
-          <div class="how-step-circle">3</div>
-          <div class="how-step-title">Shop Your Design</div>
-          <div class="how-step-desc">
-            Purchase the exact items used in your virtual room design
-          </div>
-        </div>
-      </v-col>
-    </v-row>
-  </v-container>
-
+  <!-- How it works -->
+  <HowItWorks></HowItWorks>
   <v-container height="40" :fluid="true" style="padding: 0"></v-container>
 
   <v-app>
-    <v-container
-      fluid
-      class="pa-0"
-      style="background: #fafafa; min-height: 80vh"
-    >
+    <v-container fluid class="pa-0 mb-8" style="background; min-height: 80vh">
       <v-row
         align="center"
         justify="center"
@@ -86,7 +37,7 @@
               class="mr-4 hero-btn"
               style="color: #4a2511"
               large
-              to="/A2generate"
+              to="/generate"
             >
               Start Designing
             </v-btn>
@@ -113,10 +64,6 @@
           Upload a photo and get instant redesigns, virtual staging, or fresh
           inspiration with kAIyu
         </p>
-        <!-- <div style="margin-top:2rem;">
-        <button>Get Started</button>
-        <button style="margin-left:1rem;">Learn how it works &rarr;</button>
-      </div> -->
       </Transform>
     </v-container>
 
@@ -129,14 +76,14 @@
       </v-row> -->
 
       <br />
-      <div>
+      <v-container fluid class="inspiration-section pa-0 ma-0">
         <h6 class="inspiration-title text-center">
           Are you looking for inspiration?
         </h6>
-      </div>
-      <br />
-      <div><CoverflowSlider2 /></div>
-      <br />
+        <div class="coverflow-wrapper">
+          <CoverflowSlider2 />
+        </div>
+      </v-container>
     </v-container>
   </v-app>
 </template>
@@ -145,8 +92,8 @@
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import CoverflowSlider2 from "@/components/CoverflowSlider2.vue";
 import Transform from "@/components/Transform.vue";
-import beforeImg from "@/assets/before.png";
-import afterImg from "@/assets/after.png";
+import beforeImg from "@/assets/before2.jpg";
+import afterImg from "@/assets/after2.jpg";
 
 const heroImage =
   "https://www.ikea.com/ext/ingkadam/m/564b9ffd76f3f550/original/PH200242.jpg?f=sg";
@@ -215,6 +162,7 @@ onBeforeUnmount(() => {
   border-radius: 48px;
   box-shadow: 0 8px 32px rgba(60, 60, 60, 0.08);
   object-fit: cover;
+  margin-right: 15%;
 }
 
 @media (min-width: 1264px) {
@@ -326,5 +274,23 @@ onBeforeUnmount(() => {
     padding: 2rem 1rem 1.5rem 1rem;
     border-radius: 32px;
   }
+}
+
+.inspiration-section {
+  background: #fafafa; /* Match your slider background */
+}
+
+.coverflow-wrapper {
+  height: 500px; /* Set your desired height */
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
+
+/* If you need to adjust the title spacing */
+.inspiration-title {
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+  margin-bottom: 0 !important;
 }
 </style>

@@ -213,9 +213,14 @@ import { useProductStore } from "@/stores/productStore2";
 import { storeToRefs } from "pinia";
 import ImageComparisonSlider from "@/components/ImageComparisonSlider.vue";
 import AppNav from "@/components/AppNav.vue";
+import { onMounted } from "vue";
 
 const productStore = useProductStore();
 const productList = ref(null);
+
+onMounted(() => {
+  productStore.resetStore();
+});
 
 // Destructure state and actions from the store
 const {

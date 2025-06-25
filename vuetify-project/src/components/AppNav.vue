@@ -7,7 +7,7 @@
           <span class="font-weight-bold text-body-1"> Generate</span>
         </v-btn>
 
-        <v-btn class="ml-4" :ripple="false" to="/gallery2" variant="plain">
+        <v-btn class="ml-4" :ripple="false" to="/gallery" variant="plain">
           <span class="font-weight-bold text-body-1">Gallery</span>
         </v-btn>
       </template>
