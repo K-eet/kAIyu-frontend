@@ -136,7 +136,7 @@ const slides = ref([
 
 onMounted(() => {
   new Swiper(swiperContainer.value, {
-    slidesPerView: 3, // Limited to 3 images per display
+    slidesPerView: 2,
     spaceBetween: 0,
     loop: true,
     loopedSlides: slides.value.length,
@@ -219,11 +219,11 @@ onMounted(() => {
 }
 
 .swiper-button-prev {
-  left: calc(42.8% - 210px); /* Position left button next to middle image */
+  left: calc(34.2% - 210px); /* Position left button next to middle image */
 }
 
 .swiper-button-next {
-  right: calc(42.8% - 210px); /* Position right button next to middle image */
+  right: calc(34.2% - 210px); /* Position right button next to middle image */
 }
 
 .sn_slider_projects_sl {

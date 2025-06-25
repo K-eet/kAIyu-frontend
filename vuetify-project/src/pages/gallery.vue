@@ -52,9 +52,8 @@ function handleImageClick(image, index) {
     router.push("/ProductViewer");
   }
   if (image.shouldRedirect || index === 1) {
-    router.push("/ProductViewercopy"); // or { name: '/ProductViewer2' } if using named routes
+    router.push("/ProductViewerz");
   } else {
-    // Optionally, handle other images (e.g., enlarge)
   }
 }
 

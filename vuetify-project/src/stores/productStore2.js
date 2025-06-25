@@ -113,7 +113,7 @@ export const useProductStore = defineStore('product', () => {
     },
     {
       x: 32.5,
-      y: 16,
+      y: 23,
       productId: 1, // Lamp
       tooltip: "Lamp",
     },
@@ -125,7 +125,7 @@ export const useProductStore = defineStore('product', () => {
     },
     {
       x: 25.7,
-      y: 96,
+      y: 90,
       productId: 7, // Cofee Table
       tooltip: "Coffee Table",
     },

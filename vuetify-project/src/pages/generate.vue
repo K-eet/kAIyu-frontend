@@ -359,7 +359,7 @@ const generateDesign = () => {
   if (roomType.value === "Living Room") {
     router.push("/productviewer");
   } else if (roomType.value === "Bedroom") {
-    router.push("/productviewercopy");
+    router.push("/productviewerz");
   }
 };
 const openLink = (url: string) => {
