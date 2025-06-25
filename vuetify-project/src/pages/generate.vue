@@ -161,6 +161,7 @@
                     label="Select room type"
                     rounded="lg"
                     variant="outlined"
+                    @update:modelValue="handleRoomTypeChange"
                   />
                 </div>
 
@@ -200,7 +201,7 @@
                     prepend-icon="mdi-creation"
                     rounded="lg"
                     size="large"
-                    to="/productviewer"
+                    @click="generateDesign"
                   >
                     GENERATE DESIGN
                   </v-btn>
@@ -252,10 +253,12 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 
 const imagePreview = ref<string | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
 const isDragging = ref(false);
+const router = useRouter();
 
 const triggerUpload = () => {
   if (fileInput.value) {
@@ -345,63 +348,22 @@ const galleryItems = [
   },
 ];
 
-// --- Hotspots ---
-const hotspots = [
-  {
-    x: 18,
-    y: 25,
-    url: "https://www.ikea.com/my/en/p/idanaes-high-cabinet-w-gls-drs-and-1-drawer-dark-brown-stained-50487838/",
-    tooltip: "Cabinet",
-  },
-  {
-    x: 73,
-    y: 35,
-    url: "https://www.ikea.com/my/en/p/forsa-work-lamp-nickel-plated-10146766/",
-    tooltip: "Work Lamp",
-  },
-  {
-    x: 40,
-    y: 70,
-    url: "https://www.ikea.com/my/en/p/idanaes-coffee-table-dark-brown-stained-90500003/",
-    tooltip: "Coffee Table",
-  },
-  {
-    x: 45,
-    y: 15,
-    url: "https://www.ikea.com/my/en/p/ringblomma-roman-blind-beige-40583538/",
-    tooltip: "Blind",
-  },
-  {
-    x: 38,
-    y: 40,
-    url: "https://www.ikea.com/my/en/p/roedflik-floor-reading-lamp-grey-green-80563576/",
-    tooltip: "Lamp",
-  },
-  {
-    x: 25,
-    y: 25,
-    url: "https://www.ikea.com/my/en/p/idanaes-bookcase-dark-brown-stained-80487832/",
-    tooltip: "Bookcase",
-  },
-  {
-    x: 55,
-    y: 30,
-    url: "https://www.ikea.com/my/en/p/dytag-curtains-1-pair-dark-beige-with-heading-tape-40519118/",
-    tooltip: "Curtain",
-  },
-];
-
-const openLink = (url: string) => {
-  window.open(url, "_blank");
-};
-
-// --- Generate Button Function ---
+// Modify your generate button to use dynamic routing
 const generateDesign = () => {
   console.log("Generating design with:", {
     roomType: roomType.value,
     selectedStyles: selectedStyles.value,
   });
-  dialog.value = true;
+
+  // Navigate based on room type
+  if (roomType.value === "Living Room") {
+    router.push("/productviewer");
+  } else if (roomType.value === "Bedroom") {
+    router.push("/productviewercopy");
+  }
+};
+const openLink = (url: string) => {
+  window.open(url, "_blank");
 };
 </script>
 

@@ -220,6 +220,12 @@ const productList = ref(null);
 
 onMounted(() => {
   productStore.resetStore();
+  if (!sessionStorage.getItem("hasReloaded")) {
+    sessionStorage.setItem("hasReloaded", "true");
+    window.location.reload(true);
+  } else {
+    sessionStorage.removeItem("hasReloaded"); // Clean up for next visit
+  }
 });
 
 // Destructure state and actions from the store
@@ -249,7 +255,7 @@ const {
 // Modified hotspot click handler
 const handleHotspotClick = async (productId) => {
   const idToScroll = prepareScrollToProduct(productId);
-  await nextTick(); // Wait for DOM update
+  await nextTick();
 
   // Find the product element
   const productElement = document.getElementById(`product-${idToScroll}`);

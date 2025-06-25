@@ -1,7 +1,11 @@
 <template>
   <AppNav />
 
-  <div class="landing-hero" ref="heroSection">
+  <div
+    class="landing-hero"
+    ref="heroSection"
+    style="max-width: 1600px; margin-top: 25px"
+  >
     <img ref="heroImg" :src="heroImage" alt="Hero" class="hero-img" />
     <div class="hero-content">
       <h1>Welcome to kAIyu</h1>
@@ -16,7 +20,7 @@
   <v-container height="40" :fluid="true" style="padding: 0"></v-container>
 
   <v-app>
-    <v-container fluid class="pa-0 mb-8" style="background; min-height: 80vh">
+    <v-container fluid class="pa-0 mb-5" style="background; min-height: 80vh">
       <v-row
         align="center"
         justify="center"
@@ -58,23 +62,18 @@
     </v-container>
 
     <v-container fluid style="background: #e6d6c2">
-      <Transform :before="beforeImg" :after="afterImg">
-        <h1>See Your Room Transform</h1>
-        <p>
-          Upload a photo and get instant redesigns, virtual staging, or fresh
-          inspiration with kAIyu
-        </p>
-      </Transform>
+      <div style="max-width: 1600px; margin: 0 auto">
+        <Transform :before="beforeImg" :after="afterImg">
+          <h1>See Your Room Transform</h1>
+          <p>
+            Upload a photo and get instant redesigns, virtual staging, or fresh
+            inspiration with kAIyu
+          </p>
+        </Transform>
+      </div>
     </v-container>
 
     <v-container fluid style="background: #fafafa">
-      <!-- <v-row class="mb-6">
-        <v-col cols="12">
-          <h4 class="text-center">AI-powered insights, human-centered design</h4>
-          <p class="text-center">"We harness the power of artificial intelligence to streamline the design process while maintaining the human touch that makes your space truly yours"</p>
-        </v-col>
-      </v-row> -->
-
       <br />
       <v-container fluid class="inspiration-section pa-0 ma-0">
         <h6 class="inspiration-title text-center">

@@ -220,6 +220,12 @@ const productList = ref(null);
 
 onMounted(() => {
   productStore.resetStore();
+  if (!sessionStorage.getItem("hasReloaded")) {
+    sessionStorage.setItem("hasReloaded", "true");
+    window.location.reload(true);
+  } else {
+    sessionStorage.removeItem("hasReloaded"); // Clean up for next visit
+  }
 });
 
 // Destructure state and actions from the store
