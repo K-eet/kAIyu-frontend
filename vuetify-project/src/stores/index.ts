@@ -1,4 +1,7 @@
 // Utilities
 import { createPinia } from 'pinia'
 
-export default createPinia()
+// Create and export the Pinia instance
+const pinia = createPinia()
+
+export default pinia
