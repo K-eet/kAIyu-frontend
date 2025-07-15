@@ -68,7 +68,7 @@
                 @mouseleave="hover = false"
                 :style="{ opacity: hover ? 0.9 : 0.65 }"
               >
-                <v-icon>{{
+                <v-icon color="white">{{
                   showSidebar ? "mdi-chevron-right" : "mdi-format-list-bulleted"
                 }}</v-icon>
                 <v-tooltip activator="parent" location="top">
@@ -84,10 +84,8 @@
                 @mouseleave="hoverComparison = false"
                 :style="{ opacity: hoverComparison ? 0.9 : 0.65 }"
               >
-                <v-icon>{{
-                  showImageComparison
-                    ? "mdi-cube-outline"
-                    : "mdi-image-multiple"
+                <v-icon color="white">{{
+                  showImageComparison ? "mdi-eye" : "mdi-image-multiple"
                 }}</v-icon>
                 <v-tooltip activator="parent" location="bottom">
                   {{
@@ -182,19 +180,6 @@
                       <v-list-item-subtitle class="product-price">
                         RM {{ product.price }}
                       </v-list-item-subtitle>
-
-                      <!-- Shop Now Button -->
-                      <v-btn
-                        x-small
-                        class="shop-btn"
-                        :href="product.link"
-                        target="_blank"
-                        color="#E6D6C2"
-                        @click.stop
-                      >
-                        <div>Shop</div>
-                        <v-icon right>mdi-arrow-right</v-icon>
-                      </v-btn>
                     </v-col>
                   </v-row>
                 </v-list-item>
