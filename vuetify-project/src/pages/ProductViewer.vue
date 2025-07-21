@@ -213,6 +213,10 @@ onMounted(() => {
   }
 });
 
+onMounted(() => {
+  productStore.showImageComparison = true;
+});
+
 // Destructure state and actions from the store
 const {
   showSidebar,
