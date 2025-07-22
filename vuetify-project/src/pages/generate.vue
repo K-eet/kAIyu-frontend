@@ -360,6 +360,7 @@ const galleryItems = [
   },
 ];
 
+// Loading screen function
 const generateDesign = () => {
   console.log("Generating design with:", {
     roomType: roomType.value,
@@ -369,12 +370,14 @@ const generateDesign = () => {
   // Show loading screen
   loading.value = true;
 
-  // Simulate a delay (optional, but recommended for UX)
+  // Simulate delay
   setTimeout(() => {
     if (roomType.value === "Living Room") {
       router.push("/productviewer");
     } else if (roomType.value === "Bedroom") {
       router.push("/productviewerz");
+    } else {
+      loading.value = false;
     }
   }, 2000); // set loading timer
 };

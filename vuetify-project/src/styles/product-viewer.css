@@ -194,6 +194,15 @@
   margin-bottom: 0.5rem;
 }
 
+.comparison-sidebar-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  padding: 20px;
+}
+
+
 /* Responsive styles */
 @media (max-width: 960px) {
   .sidebar-col {

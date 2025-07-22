@@ -20,6 +20,7 @@ declare module 'vue' {
     ImageContainer: typeof import('./components/imageContainer.vue')['default']
     ImageGallery: typeof import('./components/ImageGallery.vue')['default']
     Output: typeof import('./components/output.vue')['default']
+    Regenerate: typeof import('./components/Regenerate.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Transform: typeof import('./components/Transform.vue')['default']
