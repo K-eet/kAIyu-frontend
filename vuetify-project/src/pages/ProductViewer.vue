@@ -19,7 +19,7 @@
                       cover
                       height="800"
                       max-height="80vh"
-                      src="https://www.ikea.com/ext/ingkadam/m/7262b24abd9b498f/original/PH200284.jpg?f=sg"
+                      :src="productStore.currentProductImage"
                     ></v-img>
                     <!-- Hotspot buttons -->
                     <div class="hotspot-container">
@@ -48,10 +48,10 @@
               </div>
               <div v-else>
                 <ImageComparisonSlider
-                  before="src/assets/before.png"
-                  after="src/assets/after.png"
+                  v-if="showImageComparison"
+                  :after="productStore.comparisonImages.after"
+                  :before="productStore.comparisonImages.before"
                   :initial="50"
-                  class="comparison-slider"
                 >
                   <h2 class="comparison-text">
                     Drag to see the transformation!

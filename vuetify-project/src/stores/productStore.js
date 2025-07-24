@@ -9,6 +9,7 @@ export const useProductStore = defineStore('product', () => {
       product.selected = value;
     });
   };
+  const currentProductImage = ref('https://www.ikea.com/ext/ingkadam/m/7262b24abd9b498f/original/PH200284.jpg?f=sg');
   const showSidebar = ref(false);
   const showImageComparison = ref(false);
   const hover = ref(false);
@@ -115,7 +116,12 @@ export const useProductStore = defineStore('product', () => {
         },
       ]);
 
-// Computed
+// Getter
+  const comparisonImages = computed(() => ({
+    before: '/src/assets/before.png',
+    after: '/src/assets/after.png'
+  }));
+
   const isIndeterminate = computed(() => {
     const selectedCount = recommendedProducts.value.filter(p => p.selected).length;
     return selectedCount > 0 && selectedCount < recommendedProducts.value.length;
@@ -125,7 +131,7 @@ export const useProductStore = defineStore('product', () => {
     return recommendedProducts.value.filter(p => p.selected).length;
   });
 
-  // Actions
+// Actions
   
   function toggleProductCheckbox(productId) {
     const product = recommendedProducts.value.find(p => p.id === productId);
@@ -169,6 +175,10 @@ export const useProductStore = defineStore('product', () => {
     highlightedProduct.value = productId;
   };
 
+ const changeProductImage = (newImageUrl) => {
+    currentProductImage.value = newImageUrl;
+  };
+
     const prepareScrollToProduct = (productId) => {
     setHighlightedProduct(productId);
     if (!showSidebar.value && !showImageComparison.value) {
@@ -199,6 +209,8 @@ export const useProductStore = defineStore('product', () => {
   });
 
   return {
+    currentProductImage,
+    comparisonImages,
     showSidebar,
     showImageComparison,
     hover,
@@ -216,6 +228,7 @@ export const useProductStore = defineStore('product', () => {
     updateSelectAllState,
     openSelectedProducts,
     scrollToProduct,
-    toggleImageComparisonMode
+    toggleImageComparisonMode,
+    changeProductImage
   };
 });
