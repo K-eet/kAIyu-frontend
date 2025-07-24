@@ -8,8 +8,10 @@
   >
     <img ref="heroImg" :src="heroImage" alt="Hero" class="hero-img" />
     <div class="hero-content">
-      <h1>Welcome to kAIyu</h1>
-      <h2>Your vision, our expertise</h2>
+      <div class="text-background">
+        <h1>Welcome to kAIyu</h1>
+        <h2>Your vision, our expertise</h2>
+      </div>
     </div>
   </div>
 
@@ -291,5 +293,14 @@ onBeforeUnmount(() => {
   padding-top: 2rem;
   padding-bottom: 1rem;
   margin-bottom: 0 !important;
+}
+
+.text-background {
+  display: inline-block;
+  padding: 2rem 3rem;
+  background: rgba(77, 66, 66, 0.4); /* Semi-transparent dark layer */
+  backdrop-filter: blur(8px); /* Frosted glass effect */
+  border-radius: 12px;
+  border: 1px solid rgba(211, 193, 193, 0.1); /* Subtle border */
 }
 </style>

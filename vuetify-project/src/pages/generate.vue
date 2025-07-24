@@ -195,7 +195,7 @@
                 <div class="mt-auto pt-8">
                   <v-btn
                     block
-                    class="text-none font-weight-bold"
+                    class="text-none font-weight-bold image-container"
                     color="#E6D6C2"
                     elevation="0"
                     prepend-icon="mdi-creation"
@@ -206,6 +206,17 @@
                     GENERATE DESIGN
                   </v-btn>
                 </div>
+
+                <v-dialog v-model="loading" persistent width="300">
+                  <v-card class="d-flex flex-column align-center pa-6">
+                    <v-progress-circular
+                      indeterminate
+                      color="primary"
+                      size="48"
+                    />
+                    <div class="mt-4">Generating your design...</div>
+                  </v-card>
+                </v-dialog>
               </v-card-text>
             </v-card>
           </v-col>
@@ -255,6 +266,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
+const loading = ref(false);
 const imagePreview = ref<string | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
 const isDragging = ref(false);
@@ -348,22 +360,26 @@ const galleryItems = [
   },
 ];
 
-// Modify your generate button to use dynamic routing
+// Loading screen function
 const generateDesign = () => {
   console.log("Generating design with:", {
     roomType: roomType.value,
     selectedStyles: selectedStyles.value,
   });
 
-  // Navigate based on room type
-  if (roomType.value === "Living Room") {
-    router.push("/productviewer");
-  } else if (roomType.value === "Bedroom") {
-    router.push("/productviewerz");
-  }
-};
-const openLink = (url: string) => {
-  window.open(url, "_blank");
+  // Show loading screen
+  loading.value = true;
+
+  // Simulate delay
+  setTimeout(() => {
+    if (roomType.value === "Living Room") {
+      router.push("/productviewer");
+    } else if (roomType.value === "Bedroom") {
+      router.push("/productviewerz");
+    } else {
+      loading.value = false;
+    }
+  }, 2000); // set loading timer
 };
 </script>
 
@@ -439,6 +455,10 @@ const openLink = (url: string) => {
     rgba(0, 0, 0, 0.3) 50%,
     transparent 100%
   );
+}
+
+.image-container {
+  position: relative;
 }
 
 /* Responsive spacing adjustments */
