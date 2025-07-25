@@ -15,10 +15,25 @@
       Explore your curated collection of beautiful interior designs
     </p>
 
-    <div class="image-collage">
+    <div v-if="galleryStore.isLoading" class="text-center">
+      <v-progress-circular
+        indeterminate
+        color="brown"
+        size="64"
+      ></v-progress-circular>
+      <p class="mt-4">Loading Designs...</p>
+    </div>
+
+    <div v-else-if="galleryStore.error" class="text-center">
+      <v-alert type="error" prominent border="start">
+        {{ galleryStore.error }}
+      </v-alert>
+    </div>
+
+    <div v-else class="image-collage">
       <div
         v-for="(image, index) in collageImages"
-        :key="index"
+        :key="image.src || index"
         class="collage-item"
         @click="handleImageClick(image, index)"
         style="cursor: pointer"
@@ -30,11 +45,14 @@
           cover
           class="rounded-lg elevation-2 image-hover-effect"
         >
-          <!-- <template v-slot:placeholder>
+          <template v-slot:placeholder>
             <v-row class="fill-height ma-0" align="center" justify="center">
-              <v-progress-circular indeterminate color="brown"></v-progress-circular>
+              <v-progress-circular
+                indeterminate
+                color="brown"
+              ></v-progress-circular>
             </v-row>
-          </template> -->
+          </template>
         </v-img>
       </div>
     </div>
@@ -42,67 +60,36 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useGalleryStore } from "@/stores/gallery";
+
 const router = useRouter();
 
-function handleImageClick(image, index) {
-  // Example: Only redirect for images with a certain property or index
-  if (image.shouldRedirect || index === 0) {
-    router.push("/ProductViewer");
+// 1. Initialize the store
+const galleryStore = useGalleryStore();
+
+// 2. Create reactive references to the store's state
+// This keeps reactivity without having to write galleryStore.images everywhere
+const { images: collageImages } = storeToRefs(galleryStore);
+
+// 3. Call the action to fetch data when the component is mounted
+onMounted(() => {
+  // Only fetch if images haven't been loaded yet
+  if (galleryStore.images.length === 0) {
+    galleryStore.fetchImages();
   }
-  if (image.shouldRedirect || index === 1) {
-    router.push("/ProductViewerz");
-  } else {
+});
+
+function handleImageClick(image, index) {
+  // Routing logic remains in the component as it's a UI concern
+  if (image.shouldRedirect) {
+    // A more dynamic way to handle different routes
+    const route = index === 0 ? "/ProductViewer" : "/ProductViewerz";
+    router.push(route);
   }
 }
-
-// Reactive array to hold all your image data (links and alt text)
-const collageImages = ref([]);
-
-// Configuration for your collage grid
-const numRows = 5;
-const numCols = 8;
-const totalImages = numRows * numCols; // Should be 40 images for a 5x8 grid
-
-// Function to generate the image data
-const generateCollageData = () => {
-  const images = [];
-
-  const specificImageLinks = [
-    {
-      src: "https://www.ikea.com/ext/ingkadam/m/7262b24abd9b498f/original/PH200284.jpg?f=sg",
-      alt: "Elegant Living Room",
-    },
-    {
-      src: "https://www.ikea.com/ext/ingkadam/m/4402ca03ae3a7ef8/original/PH199390.jpg?f=sg",
-      alt: "Modern Bedroom",
-    },
-    {
-      src: "https://www.ikea.com/ext/ingkadam/m/10391eef320f8ff7/original/PH200234.jpg?f=sg",
-      alt: "Minimalist Bedroom",
-    },
-    {
-      src: "https://www.ikea.com/ext/ingkadam/m/62dca52bcd7a8b71/original/PH204399.jpg?f=sg",
-      alt: "Cozy Kitchen",
-    },
-    {
-      src: "https://www.ikea.com/ext/ingkadam/m/743476143a3b2310/original/PH202780.jpg?f=sg",
-      alt: "Living Room",
-    },
-    // ... continue listing all 40 of your image objects ...
-    {
-      src: "https://www.ikea.com/images/a-3-seat-sofa-a-flatwoven-rug-a-rattan-armchair-with-cushion-0ac620bb7c754ffa215575fc686e4142.jpg?f=sg",
-      alt: "Modern Office Space",
-    },
-  ];
-  images.push(...specificImageLinks);
-
-  return images;
-};
-
-// Initialize the collage images array when the component is loaded
-collageImages.value = generateCollageData();
 </script>
 
 <style scoped>
