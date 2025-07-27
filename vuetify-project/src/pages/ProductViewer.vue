@@ -15,7 +15,7 @@
                   <div class="image-wrapper">
                     <v-img
                       cover
-                      height="800"
+                      height="775"
                       max-height="80vh"
                       :src="productStore.generatedImageUrl"
                     ></v-img>
@@ -32,7 +32,7 @@
                         @click.stop="toggleAndHighlight(spot.productId)"
                       >
                         <v-icon color="white">mdi-circle</v-icon>
-                        <v-tooltip activator="parent" location="top">{{ spot.tooltip }}</v-tooltip>
+                        <v-tooltip activator="parent" location="top">{{ capitalizeWords(spot.tooltip) }}</v-tooltip>
                       </v-btn>
                     </div>
                   </div>
@@ -178,7 +178,7 @@
                         ></v-checkbox>
                       </div>
                       <v-list-item-subtitle class="product-description">
-                        {{ product.product_category }}
+                         {{ capitalizeWords(product.product_category) }}
                       </v-list-item-subtitle>
                       <v-list-item-subtitle class="product-price">
                         RM {{ product.price }}
@@ -246,6 +246,15 @@ const toggleAndHighlight = (productId) => {
 const regenerateDesign = () => {
   router.push('/generate');
 };
+
+// Helper function to capitalize the first letter of each word
+const capitalizeWords = (str) => {
+  if (!str) return ''; 
+  return str.split(' ').map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+  ).join(' ');
+};
+
 </script>
 
 <style scoped src="@/styles/product-viewer.css"></style>

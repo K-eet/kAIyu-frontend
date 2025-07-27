@@ -32,6 +32,7 @@
       border="start"
       elevation="2"
       closable
+      @click:close="galleryStore.error = null"
     >
       {{ galleryStore.error }}
     </v-alert>
@@ -70,38 +71,85 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, onActivated } from "vue"; // Import onActivated
 import { useRouter } from "vue-router";
 import { useGalleryStore } from "@/stores/galleryStore";
-import { useProductStore } from "@/stores/productStore"; // To set state for the viewer page
+import { useProductStore } from "@/stores/productStore";
 import { storeToRefs } from "pinia";
+import axios from "axios";
 import AppNav from "@/components/AppNav.vue";
 
 const router = useRouter();
-
-// Initialize the stores
 const galleryStore = useGalleryStore();
 const productStore = useProductStore();
 
-// Get reactive references to the state from the gallery store
-const { images: collageImages, isLoading, error } = storeToRefs(galleryStore);
+const { images: collageImages } = storeToRefs(galleryStore);
+const { isLoading, error } = storeToRefs(galleryStore);
 
-// When a gallery image is clicked, set the necessary data in the
-// product store and navigate to the viewer.
-function handleImageClick(image) {
-  productStore.setGenerationResult({
-    original: image.originalSrc,
-    generated: image.generatedSrc,
-  });
-  router.push("/productviewer");
+const API_BASE_URL = 'http://localhost:8000';
+
+/**
+ * Handles the click event on a gallery image.
+ * Fetches design details and navigates to the ProductViewer.
+ * @param {object} image - The image object from the gallery.
+ */
+async function handleImageClick(image) {
+  console.log("handleImageClick triggered for image ID:", image.id);
+  try {
+    galleryStore.isLoading = true;
+    galleryStore.error = null;
+    productStore.resetStore();
+
+    const generatedImageResponse = await axios.get(image.generatedSrc, {
+      responseType: 'blob',
+      timeout: 60000
+    });
+    const generatedImageBlob = generatedImageResponse.data;
+
+    const detectionFormData = new FormData();
+    detectionFormData.append("file", generatedImageBlob, "generated_image.jpg");
+
+    const simResponse = await axios.post(
+      `${API_BASE_URL}/generated/detect-and-find-similar/?generated_room_id=${image.generated_room_id}`,
+      detectionFormData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 180000,
+      }
+    );
+
+    productStore.setGenerationResult({
+      original: image.originalSrc,
+      generated: image.generatedSrc,
+      file: null,
+      detectedItems: simResponse.data.detected_items || [],
+    });
+
+    router.push("/productviewer");
+
+  } catch (err) {
+    console.error("Failed to load design details:", err);
+    galleryStore.error = err.response?.data?.detail || "Could not load the details for this design. Please try again.";
+  } finally {
+    galleryStore.isLoading = false;
+  }
 }
 
-// Fetch the gallery data when the component is first loaded.
+// This function will fetch the latest gallery data.
+const refreshGallery = () => {
+  console.log("Refreshing gallery data...");
+  galleryStore.fetchGallery();
+};
+
+// onMounted is called when the component is first created.
 onMounted(() => {
-  // Only fetch if images haven't been loaded yet to avoid redundant API calls
-  if (collageImages.value.length === 0) {
-    galleryStore.fetchGallery();
-  }
+  refreshGallery();
+});
+
+// onActivated is called when a cached component is displayed (e.g., after navigating back).
+// This ensures the gallery is always up-to-date, even if the page is cached by the router.
+onActivated(() => {
+  refreshGallery();
 });
 </script>
 
