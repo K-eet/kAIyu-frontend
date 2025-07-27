@@ -8,19 +8,13 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AppFooter: typeof import('./components/AppFooter.vue')['default']
     AppFooter2: typeof import('./components/AppFooter2.vue')['default']
     AppNav: typeof import('./components/AppNav.vue')['default']
-    AppNavAnis: typeof import('./components/AppNav-anis.vue')['default']
-    copy: typeof import('./components/AppNav copy.vue')['default']
     CoverflowSlider2: typeof import('./components/CoverflowSlider2.vue')['default']
-    HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     HowItWorks: typeof import('./components/HowItWorks.vue')['default']
     ImageComparisonSlider: typeof import('./components/ImageComparisonSlider.vue')['default']
     ImageContainer: typeof import('./components/imageContainer.vue')['default']
     ImageGallery: typeof import('./components/ImageGallery.vue')['default']
-    Output: typeof import('./components/output.vue')['default']
-    Regenerate: typeof import('./components/Regenerate.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Transform: typeof import('./components/Transform.vue')['default']

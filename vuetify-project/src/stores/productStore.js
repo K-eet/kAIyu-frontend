@@ -1,127 +1,43 @@
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 
 export const useProductStore = defineStore('product', () => {
-  // State
-  const toggleSelectAll = (value) => {
-    selectAllProducts.value = value;
-    recommendedProducts.value.forEach(product => {
-      product.selected = value;
-    });
-  };
-  const currentProductImage = ref('https://www.ikea.com/ext/ingkadam/m/7262b24abd9b498f/original/PH200284.jpg?f=sg');
+  // --- STATE ---
+  const originalImageUrl = ref(null);
+  const generatedImageUrl = ref(null);
+  const originalFile = ref(null);
+  const detectedItems = ref([]); // To store detected items and similar products
+
+  const currentProductImage = computed(() => generatedImageUrl.value || 'https://via.placeholder.com/800x600?text=No+Image');
+
   const showSidebar = ref(false);
-  const showImageComparison = ref(false);
+  const showImageComparison = ref(true);
   const hover = ref(false);
   const hoverComparison = ref(false);
   const highlightedProduct = ref(null);
   const selectAllProducts = ref(false);
-  const recommendedProducts = ref([
-    {
-      id: 1,
-      name: "IDANÄS",
-      description: "Bookcase",
-      price: 1390.0,
-      image: "https://www.ikea.com/my/en/images/products/idanaes-bookcase-dark-brown-stained__1008945_pe827388_s5.jpg?f=xl",
-      link: "https://www.ikea.com/my/en/p/idanaes-bookcase-dark-brown-stained-80487832/",
-      selected: false,
-    },
-    {
-          id: 2,
-          name: "IDANÄS",
-          description: "Coffee Table",
-          price: 129.0,
-          image:
-            "https://www.ikea.com/my/en/images/products/idanaes-coffee-table-dark-brown-stained__1161066_pe889274_s5.jpg?f=xl",
-          link: "https://www.ikea.com/my/en/p/idanaes-coffee-table-dark-brown-stained-90500003/",
-          selected: false, // Added selected property
-        },
-        {
-          id: 3,
-          name: "DYTÅG",
-          description: "Curtains",
-          price: 285,
-          image:
-            "https://www.ikea.com/my/en/images/products/dytag-curtains-1-pair-dark-beige-with-heading-tape__1024993_pe833752_s5.jpg?f=xl",
-          link: "https://www.ikea.com/my/en/p/dytag-curtains-1-pair-dark-beige-with-heading-tape-40519118/",
-          selected: false, // Added selected property
-        },
-        {
-          id: 4,
-          name: "FORSÅ",
-          description: "Work lamp",
-          price: 139.0,
-          image:
-            "https://www.ikea.com/my/en/images/products/forsa-work-lamp-nickel-plated__0121576_pe278160_s5.jpg?f=xl",
-          link: "https://www.ikea.com/my/en/p/forsa-work-lamp-nickel-plated-10146766/",
-          selected: false, // Added selected property
-        },
-        {
-          id: 5,
-          name: "IDANÄS",
-          description: "Cabinet",
-          price: 2490.0,
-          image:
-            "https://www.ikea.com/my/en/images/products/idanaes-high-cabinet-w-gls-drs-and-1-drawer-dark-brown-stained__1008948_pe827389_s5.jpg?f=xl",
-          link: "https://www.ikea.com/my/en/p/idanaes-high-cabinet-w-gls-drs-and-1-drawer-dark-brown-stained-50487838/",
-          selected: false, // Added selected property
-        },
-        {
-          id: 6,
-          name: "RÖDFLIK",
-          description: "Floor/reading lamp",
-          price: 139.0,
-          image:
-            "https://www.ikea.com/my/en/images/products/roedflik-floor-reading-lamp-grey-green__1232722_pe916583_s5.jpg?f=xl",
-          link: "https://www.ikea.com/my/en/p/roedflik-floor-reading-lamp-grey-green-80563576/",
-          selected: false, // Added selected property
-        },
-      ]),
-       hotspots = ref([
-    {
-      x: 18,
-      y: 25,
-      productId: 5,
-      tooltip: "Cabinet",
-    },
- {
-          x: 73,
-          y: 35,
-          productId: 4, // Work Lamp
-          tooltip: "Work Lamp",
-        },
-        {
-          x: 40,
-          y: 70,
-          productId: 2, // Coffee Table
-          tooltip: "Coffee Table",
-        },
-        {
-          x: 38,
-          y: 40,
-          productId: 6, // Floor Lamp
-          tooltip: "Floor Lamp",
-        },
-        {
-          x: 25,
-          y: 25,
-          productId: 1, // Bookcase
-          tooltip: "Bookcase",
-        },
-        {
-          x: 55,
-          y: 30,
-          productId: 3, // Curtains
-          tooltip: "Curtains",
-        },
-      ]);
 
-// Getter
-  const comparisonImages = computed(() => ({
-    before: '/src/assets/before.png',
-    after: '/src/assets/after.png'
-  }));
+  // The recommendedProducts will now be dynamically populated from the API results
+  const recommendedProducts = computed(() => {
+    if (!detectedItems.value) return [];
+    // Flatten the similar_products from all detected items
+    return detectedItems.value.flatMap((item, index) =>
+      item.similar_products.map(p => ({ ...p, id: `${index}-${p.product_name}` }))
+    );
+  });
 
+  // Hotspots are also dynamically generated
+  const hotspots = computed(() => {
+    if (!detectedItems.value) return [];
+    return detectedItems.value.map((item, index) => ({
+      x: (item.bounding_box.x1 + item.bounding_box.x2) / 2, // approximation of center
+      y: (item.bounding_box.y1 + item.bounding_box.y2) / 2,
+      productId: `${index}-${item.similar_products[0]?.product_name}`,
+      tooltip: item.class_name,
+    }));
+  });
+
+  // --- GETTERS ---
   const isIndeterminate = computed(() => {
     const selectedCount = recommendedProducts.value.filter(p => p.selected).length;
     return selectedCount > 0 && selectedCount < recommendedProducts.value.length;
@@ -131,8 +47,18 @@ export const useProductStore = defineStore('product', () => {
     return recommendedProducts.value.filter(p => p.selected).length;
   });
 
-// Actions
-  
+  // --- ACTIONS ---
+  function setGenerationResult({ original, generated, file, detectedItems: items }) {
+    originalImageUrl.value = original;
+    generatedImageUrl.value = generated;
+    originalFile.value = file;
+    detectedItems.value = items.map(item => ({
+        ...item,
+        similar_products: item.similar_products.map(p => ({...p, selected: false }))
+    }));
+    showImageComparison.value = true;
+  }
+
   function toggleProductCheckbox(productId) {
     const product = recommendedProducts.value.find(p => p.id === productId);
     if (product) {
@@ -140,68 +66,50 @@ export const useProductStore = defineStore('product', () => {
       updateSelectAllState();
     }
   }
-
+  
   function updateSelectAllState() {
     const allSelected = recommendedProducts.value.every(p => p.selected);
-    const noneSelected = recommendedProducts.value.every(p => !p.selected);
-    selectAllProducts.value = allSelected ? true : noneSelected ? false : false;
+    selectAllProducts.value = allSelected;
   }
+
+  function toggleSelectAll(value) {
+    selectAllProducts.value = value;
+    recommendedProducts.value.forEach(product => {
+      product.selected = value;
+    });
+  };
 
   function openSelectedProducts() {
-    const selectedProducts = recommendedProducts.value.filter(p => p.selected);
-    const count = selectedProducts.length;
-    if (count > 2 && !confirm(`This will open ${count} new tabs. Continue?`)) {
+    const selected = recommendedProducts.value.filter(p => p.selected);
+    if (selected.length > 2 && !confirm(`This will open ${selected.length} new tabs. Continue?`)) {
       return;
     }
-
-    selectedProducts.forEach((product, index) => {
-      setTimeout(() => window.open(product.link, "_blank"), index * 100);
-    });
+    selected.forEach((p, i) => setTimeout(() => window.open(p.product_url, "_blank"), i * 100));
   }
 
-  function scrollToProduct(productId) {
+  function prepareScrollToProduct(productId) {
+    highlightedProduct.value = productId;
     if (!showSidebar.value && !showImageComparison.value) {
       showSidebar.value = true;
     }
-    highlightedProduct.value = productId;
     return productId;
   }
 
   function toggleImageComparisonMode() {
     showImageComparison.value = !showImageComparison.value;
   }
-
-  const setHighlightedProduct = (productId) => {
-    highlightedProduct.value = productId;
-  };
-
- const changeProductImage = (newImageUrl) => {
-    currentProductImage.value = newImageUrl;
-  };
-
-    const prepareScrollToProduct = (productId) => {
-    setHighlightedProduct(productId);
-    if (!showSidebar.value && !showImageComparison.value) {
-      showSidebar.value = true;
-    }
-    return productId; // Return ID for component to handle scrolling
-  };
-
+  
   function resetStore() {
-  showSidebar.value = false;
-  showImageComparison.value = false;
-  hover.value = false;
-  hoverComparison.value = false;
-  highlightedProduct.value = null;
-  selectAllProducts.value = false;
+    showSidebar.value = false;
+    showImageComparison.value = true;
+    highlightedProduct.value = null;
+    selectAllProducts.value = false;
+    originalImageUrl.value = null;
+    generatedImageUrl.value = null;
+    originalFile.value = null;
+    detectedItems.value = [];
+  }
   
-  // Reset all products to unselected
-  recommendedProducts.value.forEach(product => {
-    product.selected = false;
-  });
-}
-  
-  //watch
   watch(selectAllProducts, (newValue) => {
     recommendedProducts.value.forEach(product => {
       product.selected = newValue;
@@ -209,8 +117,10 @@ export const useProductStore = defineStore('product', () => {
   });
 
   return {
+    originalImageUrl,
+    generatedImageUrl,
+    originalFile,
     currentProductImage,
-    comparisonImages,
     showSidebar,
     showImageComparison,
     hover,
@@ -221,14 +131,13 @@ export const useProductStore = defineStore('product', () => {
     hotspots,
     isIndeterminate,
     selectedCount,
+    setGenerationResult,
     resetStore,
-    setHighlightedProduct,
     prepareScrollToProduct,
     toggleProductCheckbox,
     updateSelectAllState,
     openSelectedProducts,
-    scrollToProduct,
     toggleImageComparisonMode,
-    changeProductImage
+    toggleSelectAll
   };
 });
