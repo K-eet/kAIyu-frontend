@@ -102,7 +102,7 @@ async function handleImageClick(image) {
 
     const generatedImageResponse = await axios.get(image.generatedSrc, {
       responseType: 'blob',
-      timeout: 60000
+      // timeout: 60000
     });
     const generatedImageBlob = generatedImageResponse.data;
 
