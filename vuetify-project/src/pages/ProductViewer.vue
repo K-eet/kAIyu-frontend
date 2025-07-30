@@ -15,7 +15,7 @@
                   <div class="image-wrapper">
                     <v-img
                       cover
-                      height="775"
+                      height="800"
                       max-height="80vh"
                       :src="productStore.generatedImageUrl"
                     ></v-img>
@@ -130,7 +130,7 @@
                 class="comparison-sidebar-content"
               >
                 <div class="text-center">
-                  <h3>Generate a new design (uses same image)</h3>
+                  <h3>Generate a new design</h3>
                 </div>
                 <div class="text-center mt-6">
                   <v-btn

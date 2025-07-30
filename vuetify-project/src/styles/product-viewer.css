@@ -93,7 +93,7 @@
 .sticky-sidebar {
   position: sticky;
   top: 20px;
-  height: 80vh;
+  height: 75vh;
   display: flex;
   flex-direction: column;
 }
@@ -166,10 +166,15 @@
 }
 
 .product-name {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: bold;
-  padding-right: 0.5rem;
+  white-space: normal;
+  word-break: break-word; /* This helps with long words */
+  max-width: calc(100% - 30px); /* Adjust 30px based on checkbox size/margin */
+  line-height: 1.2; /* Adjust line height for better readability when wrapped */
+  margin-bottom: 0.25rem; /* Add some space below the name */
 }
+
 
 .product-checkbox {
   margin-left: auto;
