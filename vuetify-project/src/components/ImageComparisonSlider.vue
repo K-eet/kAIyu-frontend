@@ -15,6 +15,10 @@
       :style="{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }"
       alt="Before"
     />
+        <!-- Label-->
+
+    <span class="slider-label after-label">Before</span>
+    <span class="slider-label before-label">After</span>
 
     <!-- Slider Handle -->
     <div
@@ -92,7 +96,7 @@ onBeforeUnmount(stopDrag);
   overflow: hidden;
   background: #222;
   user-select: none;
-  height: 100%; /* Make it fill the parent height */
+  height: 800px ;
 }
 .slider-img {
   position: absolute;
@@ -101,15 +105,16 @@ onBeforeUnmount(stopDrag);
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: clip-path 0.15s;
+  transition: clip-path 0.05s;
   z-index: 1;
 }
 .slider-label {
   position: absolute;
-  top: 24px;
+  bottom: 24px;
   padding: 8px 22px;
-  background: rgba(255, 255, 255, 0.85);
+  background: #E56F2C;
   border-radius: 20px;
+  color: white;
   font-weight: 600;
   font-size: 1.1rem;
   z-index: 3;
@@ -134,7 +139,7 @@ onBeforeUnmount(stopDrag);
   align-items: center;
   justify-content: center;
   left: 50%;
-  transition: left 0.15s;
+  transition: left 0.05s;
 }
 .slider-circle {
   width: 44px;

@@ -64,14 +64,16 @@
     </v-container>
 
     <v-container fluid style="background: #e6d6c2">
-      <div style="max-width: 1600px; margin: 0 auto">
-        <Transform :before="beforeImg" :after="afterImg">
+      <div style="max-width: 1600px; margin: 0 auto;">
+        
+        <ImageComparisonSlider :initial="50" :before="beforeImg" :after="afterImg">
+          
           <h1>See Your Room Transform</h1>
           <p>
             Upload a photo and get instant redesigns, virtual staging, or fresh
             inspiration with kAIyu
           </p>
-        </Transform>
+        </ImageComparisonSlider>
       </div>
     </v-container>
 

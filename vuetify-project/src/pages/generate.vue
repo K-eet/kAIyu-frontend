@@ -1,13 +1,9 @@
 <template>
-  <!-- Navigation Bar -->
   <AppNav />
-  <!-- Main Content -->
-  <!-- Hero Section with Better Spacing -->
   <v-container class="py-md-12 mt-15">
     <v-row justify="center">
       <v-col cols="12" lg="12" md="8" xl="10" sm="6">
         <v-row class="gx-8 gy-8">
-          <!-- Upload Section -->
           <v-col cols="12" md="6">
             <v-card
               class="upload-card h-100 d-flex flex-column"
@@ -15,13 +11,10 @@
               rounded="xl"
               variant="outlined"
             >
-              <!-- Header with consistent padding -->
               <v-card-title class="text-h5 font-weight-bold pa-8 pb-0">
                 Upload Your Room Photo
               </v-card-title>
-              <!-- Content area that grows -->
               <v-card-text class="pa-7 pt-8 flex-grow-1 d-flex flex-column">
-                <!-- Drag & Drop Zone -->
                 <div class="flex-grow-1 d-flex flex-column">
                   <v-sheet
                     v-if="!imagePreview"
@@ -60,7 +53,6 @@
                     </div>
                   </v-sheet>
 
-                  <!-- Image Preview -->
                   <v-card
                     v-else
                     border
@@ -112,14 +104,11 @@
                   </v-card>
                 </div>
 
-                <!-- Bottom section with divider and button -->
                 <div class="mt-auto">
-                  <!-- Divider -->
                   <v-divider class="my-5">
                     <span class="text-caption text-grey px-4">OR</span>
                   </v-divider>
 
-                  <!-- Take Photo -->
                   <v-btn
                     block
                     class="text-none font-weight-bold"
@@ -136,7 +125,6 @@
             </v-card>
           </v-col>
 
-          <!-- Configuration Section -->
           <v-col cols="12" md="6">
             <v-card
               class="config-card h-100 d-flex flex-column"
@@ -144,13 +132,10 @@
               rounded="xl"
               variant="outlined"
             >
-              <!-- Header with consistent padding -->
               <div class="text-h5 font-weight-bold pa-8 pb-0">
                 Configuration
               </div>
-              <!-- Content area that grows -->
               <v-card-text class="pa-8 pt-4 flex-grow-1 d-flex flex-column">
-                <!-- Room Type -->
                 <div class="mb-8">
                   <div class="text-h6 font-weight-medium mb-4">Room Type</div>
                   <v-select
@@ -161,11 +146,9 @@
                     label="Select room type"
                     rounded="lg"
                     variant="outlined"
-                    @update:modelValue="handleRoomTypeChange"
                   />
                 </div>
 
-                <!-- Design Styles -->
                 <div class="flex-grow-1 d-flex flex-column">
                   <div class="text-h6 font-weight-medium mb-4">
                     Design Styles
@@ -176,7 +159,7 @@
                     rounded="lg"
                   >
                     <v-chip-group
-                      v-model="selectedStyles"
+                      v-model="selectedStyle"
                       column
                       selected-class="selected-design-chip elevated text-white"
                     >
@@ -185,14 +168,25 @@
                         :key="style"
                         class="ma-1 text-none font-weight-medium"
                         :text="style"
+                        :value="style"
                         variant="outlined"
                       />
                     </v-chip-group>
                   </v-sheet>
                 </div>
 
-                <!-- Generate Button - positioned at bottom -->
                 <div class="mt-auto pt-8">
+                  <v-alert
+                    v-if="error"
+                    type="error"
+                    dismissible
+                    class="mb-4"
+                    variant="tonal"
+                    @click:close="error = null"
+                  >
+                    {{ error }}
+                  </v-alert>
+
                   <v-btn
                     block
                     class="text-none font-weight-bold image-container"
@@ -201,6 +195,8 @@
                     prepend-icon="mdi-creation"
                     rounded="lg"
                     size="large"
+                    :loading="loading"
+                    :disabled="!canGenerate"
                     @click="generateDesign"
                   >
                     GENERATE DESIGN
@@ -214,7 +210,7 @@
                       color="primary"
                       size="48"
                     />
-                    <div class="mt-4">Generating your design...</div>
+                    <div class="mt-4">{{ loadingMessage }}</div>
                   </v-card>
                 </v-dialog>
               </v-card-text>
@@ -224,163 +220,141 @@
       </v-col>
     </v-row>
   </v-container>
-
-  <!-- Image Dialog -->
-  <v-dialog v-model="dialog" max-width="1400">
-    <v-card>
-      <div style="position: relative">
-        <v-img
-          cover
-          height="800"
-          max-height="80vh"
-          src="https://www.ikea.com/ext/ingkadam/m/7262b24abd9b498f/original/PH200284.jpg?f=sg"
-        ></v-img>
-        <!-- Hotspot buttons in dialog -->
-        <div class="hotspot-container">
-          <v-btn
-            v-for="(spot, index) in hotspots"
-            :key="index"
-            class="hotspot-button"
-            color="black"
-            icon
-            size="small"
-            :style="{ left: spot.x + '%', top: spot.y + '%' }"
-            @click.stop="openLink(spot.url)"
-          >
-            <v-icon color="white">mdi-circle</v-icon>
-            <v-tooltip activator="parent" location="top">
-              {{ spot.tooltip }}
-            </v-tooltip>
-          </v-btn>
-        </div>
-      </div>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="brown-darken" @click="dialog = false">Close</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
+import { useProductStore } from "@/stores/productStore";
+import axios from "axios";
+import AppNav from "@/components/AppNav.vue";
+
+const router = useRouter();
+const productStore = useProductStore();
+
+const API_BASE_URL = "http://localhost:8000";
 
 const loading = ref(false);
+const loadingMessage = ref("Generating your design...");
+const error = ref<string | null>(null);
+
 const imagePreview = ref<string | null>(null);
+const uploadedFile = ref<File | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
 const isDragging = ref(false);
-const router = useRouter();
 
-const triggerUpload = () => {
-  if (fileInput.value) {
-    fileInput.value.click(); // Programmatically click the hidden input
+const roomType = ref<string | null>(null);
+const selectedStyle = ref<string | null>(null);
+
+const canGenerate = computed(() => {
+  return uploadedFile.value && roomType.value && selectedStyle.value && !loading.value;
+});
+
+const triggerUpload = () => fileInput.value?.click();
+
+const processFile = (file: File) => {
+  if (file && file.type.startsWith("image/")) {
+    imagePreview.value = URL.createObjectURL(file);
+    uploadedFile.value = file;
   } else {
-    console.error("File input not found!"); // Debugging
+    error.value = "Invalid file type. Please upload an image.";
   }
 };
 
 const handleFileSelect = (event: Event) => {
   const target = event.target as HTMLInputElement;
-  console.log("Files selected:", target.files); // Debug log
-  if (target.files && target.files[0]) {
-    const file = target.files[0];
-    console.log("File type:", file.type); // Debug log
-    if (file.type.startsWith("image/")) {
-      imagePreview.value = URL.createObjectURL(file);
-    } else {
-      console.error("Selected file is not an image");
-    }
-  }
+  if (target.files && target.files[0]) processFile(target.files[0]);
 };
 
 const handleDrop = (event: DragEvent) => {
   isDragging.value = false;
   const files = event.dataTransfer?.files;
-  if (files && files[0] && files[0].type.startsWith("image/")) {
-    imagePreview.value = URL.createObjectURL(files[0]);
-  }
+  if (files && files[0]) processFile(files[0]);
 };
 
 const removeImage = () => {
+  if (imagePreview.value) URL.revokeObjectURL(imagePreview.value);
   imagePreview.value = null;
+  uploadedFile.value = null;
 };
 
-const takePhoto = () => {
-  // Implement camera functionality
-  console.log("Take photo clicked");
-};
+const takePhoto = () => console.log("Take photo clicked");
 
-// --- Form Refs ---
-const roomType = ref<string>("");
-const selectedStyles = ref<string[]>([]);
+const generateDesign = async () => {
+  if (!canGenerate.value) {
+    error.value = "Please upload an image and select all options.";
+    return;
+  }
 
-// --- Dialog control ---
-const dialog = ref(false);
-
-// --- Styles & Room Types ---
-const roomTypes = [
-  "Bedroom",
-  "Living Room",
-  "Kitchen",
-  "Bathroom",
-  "Dining Room",
-  "Home Office",
-];
-
-const designStyles = [
-  "Modern",
-  "Minimalist",
-  "Scandinavian",
-  "Industrial",
-  "Bohemian",
-  "Traditional",
-  "Contemporary",
-  "Mid-Century",
-  "Rustic",
-  "Art Deco",
-];
-
-// --- Gallery Items ---
-const galleryItems = [
-  {
-    src: "https://homefirstindia.com/app/uploads/2020/12/Living-Room.jpg",
-    title: "Modern Living Room",
-    description: "Clean lines and contemporary furniture",
-  },
-  {
-    src: "https://images.pexels.com/photos/6970025/pexels-photo-6970025.jpeg",
-    title: "Scandinavian Bedroom",
-    description: "Minimalist design with natural elements",
-  },
-  {
-    src: "https://images.pexels.com/photos/7031760/pexels-photo-7031760.jpeg",
-    title: "Industrial Kitchen",
-    description: "Raw materials and urban aesthetics",
-  },
-];
-
-// Loading screen function
-const generateDesign = () => {
-  console.log("Generating design with:", {
-    roomType: roomType.value,
-    selectedStyles: selectedStyles.value,
-  });
-
-  // Show loading screen
   loading.value = true;
+  error.value = null;
 
-  // Simulate delay
-  setTimeout(() => {
-    if (roomType.value === "Living Room") {
-      router.push("/productviewer");
-    } else if (roomType.value === "Bedroom") {
-      router.push("/productviewerz");
-    } else {
-      loading.value = false;
-    }
-  }, 2000); // set loading timer
+  const formData = new FormData();
+  formData.append("file", uploadedFile.value as Blob);
+  formData.append("room_style", roomType.value as string);
+  formData.append("design_style", selectedStyle.value as string);
+
+  try {
+    // Step 1: Generate the new design
+    loadingMessage.value = "Generating new design...";
+    const genResponse = await axios.post(`${API_BASE_URL}/generated/generate-image/`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+      timeout: 300000, // 5 minutes timeout for image generation
+    });
+
+    const generatedData = genResponse.data;
+    const generatedRoomId = generatedData.generated_room_id;
+
+    // Step 2: Fetch the generated image to send for detection
+    loadingMessage.value = "Analyzing furniture...";
+    const generatedImageResponse = await axios.get(
+      `${API_BASE_URL}/generated/view/generated/${generatedData.generated_image_path.split(/[/\\]/).pop()}`,
+      { responseType: 'blob' }
+    );
+    const generatedImageBlob = generatedImageResponse.data;
+
+
+    // Step 3: Detect furniture and find similar items
+    const detectionFormData = new FormData();
+    detectionFormData.append("file", generatedImageBlob, "generated_image.jpg");
+
+    const simResponse = await axios.post(
+      `${API_BASE_URL}/generated/detect-and-find-similar/?generated_room_id=${generatedRoomId}`,
+      detectionFormData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 180000,
+      }
+    );
+
+    const similarityResults = simResponse.data;
+
+    // Step 4: Save everything to the store and navigate
+    const originalFilename = generatedData.original_image_path.split(/[/\\]/).pop();
+    const generatedFilename = generatedData.generated_image_path.split(/[/\\]/).pop();
+    
+    const originalUrl = `${API_BASE_URL}/generated/view/uploads/${originalFilename}`;
+    const generatedUrl = `${API_BASE_URL}/generated/view/generated/${generatedFilename}`;
+
+    productStore.setGenerationResult({
+      original: originalUrl,
+      generated: generatedUrl,
+      file: uploadedFile.value,
+      detectedItems: similarityResults.detected_items || [],
+    });
+
+    router.push('/productviewer');
+
+  } catch (err: any) {
+    console.error("Design generation failed:", err);
+    error.value = err.response?.data?.detail || "An error occurred during the process.";
+  } finally {
+    loading.value = false;
+  }
 };
+
+const roomTypes = ["Bedroom", "Living Room", "Kitchen", "Bathroom", "Dining Room", "Home Office"];
+const designStyles = ["Modern", "Minimalist", "Scandinavian", "Industrial", "Bohemian", "Traditional", "Contemporary", "Mid-Century", "Rustic", "Art Deco"];
 </script>
 
 <style scoped>
@@ -390,23 +364,6 @@ const generateDesign = () => {
 
 .selected-design-chip {
   background-color: #e56f2c !important;
-}
-
-.hotspot-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; /* prevent overlay blocking clicks elsewhere */
-}
-
-.hotspot-button {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  pointer-events: auto; /* re-enable interaction for buttons */
-  background: rgba(0, 0, 0, 0.6) !important;
-  border: 2px solid white !important;
 }
 
 .upload-card,
@@ -439,40 +396,16 @@ const generateDesign = () => {
   border-radius: 4px;
 }
 
-.gallery-carousel .v-carousel__controls {
-  background: transparent !important;
-}
-
-.carousel-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.7) 0%,
-    rgba(0, 0, 0, 0.3) 50%,
-    transparent 100%
-  );
-}
-
 .image-container {
   position: relative;
 }
 
-/* Responsive spacing adjustments */
 @media (max-width: 960px) {
   .pa-8 {
     padding: 1.5rem !important;
   }
-
-  .pa-md-10 {
-    padding: 1.5rem !important;
-  }
 }
 
-/* Custom spacing utilities */
 .gx-8 {
   --v-row-gap-x: 2rem;
 }

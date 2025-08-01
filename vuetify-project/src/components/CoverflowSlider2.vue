@@ -221,11 +221,11 @@ onMounted(() => {
 }
 
 .swiper-button-prev {
-  left: calc(34.2% - 210px);
+  left: calc(33.5% - 210px);
 }
 
 .swiper-button-next {
-  right: calc(34.2% - 210px);
+  right: calc(33.5% - 210px);
 }
 
 .sn_slider_projects_sl {
